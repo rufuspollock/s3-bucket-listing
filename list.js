@@ -1,17 +1,27 @@
-var url = location.protocol + '//' + location.hostname;
-$.get(url)
-  .done(function(data) {
-    var xml = $(data);
-    var files = $.map(xml.find('Contents'), function(item) {
-      item = $(item);
-      return {
-        Key: item.find('Key').text(),
-        LastModified: item.find('LastModified').text(),
-        Size: item.find('Size').text(),
-      }
+jQuery(function($) {
+  if (typeof BUCKET_URL != 'undefined') {
+    var url = BUCKET_URL;
+  } else {
+    var url = location.protocol + '//' + location.hostname;
+  }
+  $.get(url)
+    .done(function(data) {
+      var xml = $(data);
+      var files = $.map(xml.find('Contents'), function(item) {
+        item = $(item);
+        return {
+          Key: item.find('Key').text(),
+          LastModified: item.find('LastModified').text(),
+          Size: item.find('Size').text(),
+        }
+      });
+      renderTable(files);
+    })
+    .fail(function(error) {
+      alert('There was an error');
+      console.log(error);
     });
-    renderTable(files);
-  });
+});
 
 function renderTable(files) {
   var cols = [ 45, 30, 15 ];
