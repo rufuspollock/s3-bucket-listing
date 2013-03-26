@@ -25,13 +25,14 @@ jQuery(function($) {
 
 function renderTable(files) {
   var cols = [ 45, 30, 15 ];
-  var content = padRight('Key', cols[0]) + '  ' + padRight('Last Modified', cols[1]) + '  ' + padRight('Size', cols[2]) + '\n';
+  var content = padRight('Last Modified', cols[1]) + '  ' + padRight('Size', cols[2]) + 'Key \n';
   content += new Array(cols[0] + cols[1] + cols[2] + 4).join('-') + '\n';
   $.each(files, function(idx, item) {
     var key = item.Key;
-    var row = '<a href="' + key + '">' + padRight(item.Key, cols[0]) + '</a>  ';
+    var row = '';
     row += padRight(item.LastModified, cols[1]) + '  ';
     row += padRight(item.Size, cols[2]);
+    row += '<a href="' + key + '">' + item.Key + '</a>';
     content += row + '\n';
   });
 
