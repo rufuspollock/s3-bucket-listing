@@ -4,8 +4,12 @@
 
 * { font-family: 'Noto Sans', sans-serif;}
 
+table {
+    margin: 10px;
+}
 .page-header {
     margin-bottom: 0px;
+    padding: 10px;
 }
 #search-bar {
     background-color: #666;
