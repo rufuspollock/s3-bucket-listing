@@ -58,8 +58,16 @@
         </div>
         <div id="search-bar">Filter for =>
             <input type="text" class="input-medium search-query" ng-model="search" ui-reset placeholder="Search" /></div>
-
-        <table class="file-list table table-striped table-condensed">
+        <div ng-show="success" class="alert  alert-success">
+            {{ success }}
+        </div>
+        <div ng-show="error" class="alert  alert-error">
+            {{ error }}
+        </div>
+        <div ng-hide="bucket.files">
+            <h3 class="">No results</h3>
+        </div>
+        <table ng-show="bucket.files" class="file-list table table-striped table-condensed">
             <thead>
             <tr>
                 <th>Filename</th>
