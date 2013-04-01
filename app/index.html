@@ -2,13 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet" />
-    <link href="css/app.css" rel="stylesheet" />
-    <style>
-        [ng-cloak] {
-            display: none;
-        }
-    </style>
     <script>
         // include angular loader, which allows the files to load in any order
         /*
@@ -31,8 +24,9 @@
 
         // load all of the dependencies asynchronously.
         $script([
-            'http://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js',
             'http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js',
+            'http://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js',
+            'http://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.min.js',
             'http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.0.0/moment.min.js',
             'http://cdnjs.cloudflare.com/ajax/libs/numeral.js/1.4.5/numeral.min.js',
             'js/app.js',
@@ -45,28 +39,28 @@
             angular.bootstrap(document, ['bucketListApp']);
         });
     </script>
-
     <title>S3 Bucket Listing</title>
-    <link rel="stylesheet" href="css/app.css"/>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+    <style>
+        [ng-cloak] {
+            display: none;
+        }
+    </style>
 </head>
 <body ng-cloak>
-
-
     <div ng-view>
     </div>
     <script type="text/ng-template" id="list">
-        <div class="hero-unit">
-            <h1>S3 Bucket Listing</h1>
-
+        <div class="page-header">
+            <h2>S3 Bucket Listing <small>{{bucket.url}}</small></h2>
         </div>
+        <div id="search-bar">Filter for =>
+            <input type="text" class="input-medium search-query" ng-model="search" ui-reset placeholder="Search" /></div>
+
         <table class="file-list table table-striped table-condensed">
             <thead>
-            <tr>
-                <th colspan="3">
-                    <div id="bucket-url">Bucket URL => <input type="url" ng-model="bucket.url" placeholder="Enter S3 Bucket URL" /></div>
-                    <div id="search-bar">Filter for => <input type="text" ng-model="search" placeholder="Search" /></div>
-                </th>
-            </tr>
             <tr>
                 <th>Filename</th>
                 <th>Last Modified</th>
