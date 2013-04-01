@@ -1,0 +1,31 @@
+/* app-specific styling */
+@import url(http://fonts.googleapis.com/css?family=Noto+Sans:400,700);
+@import url(http://fonts.googleapis.com/css?family=Inconsolata);
+
+* { font-family: 'Noto Sans', sans-serif;}
+.hero-unit {
+    height:60px;
+    padding: 25px;
+    margin-bottom: 0px;
+}
+#bucket-url, #search-bar {
+    background-color: #333;
+    color:#fff;
+    font-weight:bold;
+    padding: 5px;
+    vertical-align: middle;
+    width:770px;
+}
+#bucket-url input {
+    width:600px;
+    font-family: 'Inconsolata', sans-serif;
+}
+#search-bar input {
+    width:100px;
+    font-family: 'Inconsolata', sans-serif;
+}
+
+.file-list { width:770px;}
+.file-key { text-align: left;}
+.file-lastModified { text-align:center; }
+.file-size { text-align:right; }

@@ -4,7 +4,7 @@ Inspiration from http://aws.amazon.com/code/Amazon-S3/1713
 
 ## Usage
 
-Copy the index.html into the s3 bucket where you want the listing (you can also
+Copy the /app folder and all of its contents into the s3 bucket where you want the listing (you can also
 put the index.html on any website).
 
 **Note:** for s3 buckets which are in website mode you must take some
