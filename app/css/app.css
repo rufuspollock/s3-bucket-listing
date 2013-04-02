@@ -12,18 +12,34 @@ table {
     margin-top: 0px;
     padding: 10px;
 }
-#search-bar {
+.status-bar {
     background-color: #666;
     color:#fff;
     font-weight:bold;
     padding: 5px;
     vertical-align: middle;
 }
-#search-bar input {
+.status-bar .status {
+    margin:5px;
+}
+.status-bar input {
     width:100px;
     font-family: 'Inconsolata', sans-serif;
 }
-
+.status-search {
+    font-weight: bold;
+    padding: 5px;
+    margin: 10px;
+}
+.alert {
+    padding:5px;
+}
+.file-list .empty-set {
+    text-align:center;
+    text-color:#333;
+    font-style:italic;
+    font-size:larger;
+}
 .file-list {
     padding: 15px;
 }

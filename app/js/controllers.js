@@ -2,13 +2,14 @@
 
 /* Controllers */
 function ListController($scope,$http,$window) {
+    var defaultBucketUrl = 'http://s3-bucket-listing-test.s3-ap-southeast-1.amazonaws.com';
     $scope.bucket = {};
-    //'http://data.openspending.org.s3-eu-west-1.amazonaws.com';
-    $scope.bucket.url = $window.location.protocol=='file:' ? 'http://files.variaprima.com.s3-ap-southeast-1.amazonaws.com' :
+    $scope.searchFileName = '';
+    $scope.bucket.url = $window.location.protocol=='file:' ? defaultBucketUrl :
         $window.location.protocol + '//' + $window.location.hostname.replace('s3-website','s3');
     getBucketList($scope, $http);
     $scope.updateBucketUrl = function($scope, $http){
-        console.log('Bucket URL changed: ' + $scope.bucket.url)
+        console.log('Bucket URL changed: ' + $scope.bucket.url);
         getBucketList($scope, $http);
     };
     //scope.bucket = { url: 'http://data.openspending.org.s3-eu-west-1.amazonaws.com' };
@@ -21,11 +22,13 @@ function getBucketList($scope, $http){
     $http.get($scope.bucket.url).
         success(function(data, status, headers, config) {
             var success = {
-                status: status,
+                statusMessage:'OK',
+                statusCode: status,
                 headers: headers,
-                config: config
+                config: config,
+                data: '' // unnecessary?
             };
-            $scope.success=success;
+            $scope.alert=success;
             console.log(success);
             var xml = angular.element(data);
             var s3contents = _.filter(xml.children(),function(x) { return x.tagName=='CONTENTS' });
@@ -46,11 +49,13 @@ function getBucketList($scope, $http){
         }).
         error(function(data, status, headers, config) {
             var error = {
-                status: status,
+                statusMessage: 'Error',
+                statusCode: status,
                 headers: headers,
-                config: config
+                config: config,
+                data: data
             };
-            $scope.error = error;
+            $scope.alert = error;
             console.log(error);
         });
 }

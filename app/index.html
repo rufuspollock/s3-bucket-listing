@@ -41,6 +41,7 @@
     </script>
     <title>S3 Bucket Listing</title>
     <link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.0.2/css/font-awesome.min.css" rel="stylesheet" />
     <link href="http://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
     <style>
@@ -56,33 +57,72 @@
         <div class="page-header">
             <h2>S3 Bucket Listing <small>{{bucket.url}}</small></h2>
         </div>
-        <div id="search-bar">Filter for =>
-            <input type="text" class="input-medium search-query" ng-model="search" ui-reset placeholder="Search" /></div>
-        <div ng-show="success" class="alert  alert-success">
-            Status: OK ({{ success.status }})
+        <div class="status-bar row">
+            <div class="span4" >Filter for =>
+                <input type="text" class="input-large search-query" ng-model="searchFileName" ui-reset placeholder="Search" />
+            </div>
+            <div class="span4 status">
+                Bucket Response
+                <span class="status-bucket" ng-class="{true: 'alert alert-success', false: 'alert alert-error'}[alert.statusCode=='200']">
+                    {{ alert.statusMessage }} ({{ alert.statusCode }})
+                </span>
+            </div>
+            <div class="span4 status">
+                Connection Status
+                <span class="status-connection" ng-class="{true: 'alert alert-success', false: 'alert alert-error'}[online=='online']">
+                    <span ng-show="online == 'online'">Online</span><span ng-hide="online == 'online'">Offline</span>
+                </span>
+            </div>
         </div>
-        <div ng-show="error" class="alert  alert-error">
-            Status: Error ({{ error.status }})
+        <div ng-hide="searchFileName" class="status-search row badge">
+            <div class="span12">
+                <strong>{{ bucket.files.length }}</strong> files found
+            </div>
         </div>
-        <div ng-hide="bucket.files">
-            <h3 class="">No results</h3>
+        <div ng-show="searchFileName" class="status-search row" ng-class="{true:'badge badge-important',false:'badge badge-info'}[(bucket.files | filter:{ key: searchFileName }).length==0]">
+            <div class="span12">
+                <strong>{{(bucket.files | filter:{ key: searchFileName }).length}}</strong> matches for <strong>{{ searchFileName }}</strong>
+            </div>
         </div>
-        <table ng-show="bucket.files" class="file-list table table-striped table-condensed">
-            <thead>
-            <tr>
-                <th>Filename</th>
-                <th>Last Modified</th>
-                <th>Size</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="file in bucket.files | filter:search">
-                <td class="file-key"><a href="{{ bucket.url }}/{{ file.key }} ">{{ file.key }}</a></td>
-                <td class="file-lastModified">{{ file.lastModified | formatDateFromNow }}</td>
-                <td class="file-size">{{ file.size | formatBytes }}</td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="row file-list">
+            <table class="table table-striped table-condensed">
+                <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Last Modified</th>
+                    <th>Size</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr ng-show="bucket.files" ng-repeat="file in bucket.files | filter:{ key: searchFileName }">
+                        <td class="file-key"><a href="{{ bucket.url }}/{{ file.key }} ">{{ file.key }}</a></td>
+                        <td class="file-lastModified">{{ file.lastModified | formatDateFromNow }}</td>
+                        <td class="file-size">{{ file.size | formatBytes }}</td>
+                    </tr>
+                    <tr ng-hide="bucket.files.length>0">
+                        <td colspan="3" class="empty-set">
+                            <div ng-show="(bucket.files && status.statusCode==200)">
+                                <div>No data files found on <strong>{{ bucket.url }}</strong></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-hide="(bucket.files | filter:{ key: searchFileName }).length">
+                        <td colspan="3" class="empty-set">
+                            <div ng-hide="searchFileName==''">
+                                <p>No Results for <strong>{{ searchFileName }}</strong></p>
+                            </div>
+                            <div ng-show="(!bucket.files && status.statusCode!=200)">
+                                <div>Unable to connect to <strong>{{ bucket.url }}</strong>!</div>
+                                <div>Error Details: {{ alert }}</div>
+                            </div>
+                            <div ng-show="(bucket.files && status.statusCode==200)">
+                                <div>No data files found on <strong>{{ bucket.url }}</strong></div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </script>
 </body>
 </html>
