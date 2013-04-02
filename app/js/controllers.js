@@ -44,7 +44,7 @@ function getBucketList($scope, $http){
                 }).
                 value();
             var files = _.filter(angular.element(contents),function(item){ return item.size > 0;});
-            files = _.filter(angular.element(files),function(item){ return item.key.indexOf("app/") != 0;});
+            files = _.filter(angular.element(files),function(item){ return item.key.indexOf("files/") == 0;});
             $scope.bucket.files = files;
         }).
         error(function(data, status, headers, config) {
