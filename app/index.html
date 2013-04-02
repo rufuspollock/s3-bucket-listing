@@ -59,10 +59,10 @@
         <div id="search-bar">Filter for =>
             <input type="text" class="input-medium search-query" ng-model="search" ui-reset placeholder="Search" /></div>
         <div ng-show="success" class="alert  alert-success">
-            {{ success }}
+            Status: OK ({{ success.status }})
         </div>
         <div ng-show="error" class="alert  alert-error">
-            {{ error }}
+            Status: Error ({{ error.status }})
         </div>
         <div ng-hide="bucket.files">
             <h3 class="">No results</h3>
