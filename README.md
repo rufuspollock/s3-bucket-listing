@@ -29,10 +29,18 @@ which *differs* from the website S3 bucket endpoint. For more details see:
 
 <http://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteEndpoints.html#WebsiteRestEndpointDiff>
 
-A specific example for the US east region:
+A specific example for the EU west region:
+
+* Website endpoint: http://example-bucket.s3-website-eu-west-1.amazonaws.com/
+* S3 bucket endpoint (for RESTful calls): http://example-bucket.s3-eu-west-1.amazonaws.com/
+
+Note that US east region is **different** in that the S3 bucket endpoint does not include a location spec but the website version does:
 
 * Website endpoint: http://example-bucket.s3-website-us-east-1.amazonaws.com/
-* S3 bucket endpoint (for RESTful calls): http://example-bucket.s3-us-east-1.amazonaws.com/
+* S3 bucket endpoint (for RESTful calls): http://example-bucket.s3.amazonaws.com/
+
+
+
 
 ## Copyright and License
 
