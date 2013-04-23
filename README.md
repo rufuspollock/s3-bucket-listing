@@ -4,8 +4,8 @@ Inspiration from http://aws.amazon.com/code/Amazon-S3/1713
 
 ## Usage
 
-Copy the index.html into the s3 bucket where you want the listing (you can also
-put the index.html on any website).
+Copy the /app folder contents and root /index.html file into the s3 bucket where you want the listing.
+By default, the app will only list any items in the /files directory (eg. http://<s3-bucket-url>/files).
 
 **Note:** for s3 buckets which are in website mode you must take some
 additional steps, see below.
