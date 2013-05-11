@@ -4,8 +4,12 @@ jQuery(function($) {
   } else {
     var url = location.href;
   }
+  // set loading notice
+  $('#listing').html('<h3>Loading <img src="http://assets.okfn.org/images/icons/ajaxload-circle.gif" /></h3>');
   $.get(url)
     .done(function(data) {
+      // clear loading notice
+      $('#listing').html('');
       var xml = $(data);
       var files = $.map(xml.find('Contents'), function(item) {
         item = $(item);
