@@ -1,12 +1,45 @@
+if (typeof S3BL_IGNORE_PATH == 'undefined' || S3BL_IGNORE_PATH!=true) {
+  var S3BL_IGNORE_PATH = false;
+}
 jQuery(function($) {
   if (typeof BUCKET_URL != 'undefined') {
-    var url = BUCKET_URL + location.search;
+    var s3_rest_url = BUCKET_URL;
   } else {
-    var url = location.href;
+    var s3_rest_url = location.protocol + '//' + location.hostname;
   }
+
+  // handle pathes / prefixes - 2 options
+  //
+  // 1. Using the pathname
+  // {bucket}/{path} => prefix = {path}
+  // 
+  // 2. Using ?prefix={prefix}
+  //
+  // Why both? Because we want classic directory style listing in normal
+  // buckets but also allow deploying to non-buckets
+  //
+  // Can explicitly disable using path (useful if *not* deploying to an s3
+  // bucket) by setting
+  //
+  // S3BL_IGNORE_PATH = true
+  var rx = /.*[?&]prefix=([^&]+)(&.*)?$/;
+  var prefix = '';
+  if (S3BL_IGNORE_PATH==false) {
+    var prefix = location.pathname.replace(/^\//, '');
+  }
+  var match = location.search.match(rx);
+  if (match) {
+    prefix = match[1];
+  }
+  if (prefix) {
+    // make sure we end in /
+    var prefix = prefix.replace(/\/$/, '') + '/';
+    s3_rest_url += '?prefix=' + prefix;
+  }
+
   // set loading notice
   $('#listing').html('<h3>Loading <img src="http://assets.okfn.org/images/icons/ajaxload-circle.gif" /></h3>');
-  $.get(url)
+  $.get(s3_rest_url)
     .done(function(data) {
       // clear loading notice
       $('#listing').html('');
@@ -33,9 +66,12 @@ function renderTable(files, prefix) {
   content.push(padRight('Last Modified', cols[1]) + '  ' + padRight('Size', cols[2]) + 'Key \n');
   content.push(new Array(cols[0] + cols[1] + cols[2] + 4).join('-') + '\n');
   
+  // add the ../ at the start of the directory listing
+  // and remove first item (which will be that directory)
   if (prefix) {
     files.shift();
     var item = {
+      // one directory up
       Key: prefix.replace(/\/$/, '').split('/').slice(0, -1).concat('').join('/'),
       LastModified: '',
       Size: ''
@@ -57,11 +93,25 @@ function renderTable(files, prefix) {
 function renderRow(item, cols, keyText, content) {
   var key = item.Key;
   var row = '';
+  var href;
+  if (key === '' || key[key.length-1] === '/') { // its a directory (note empty key is root directory)
+    if (S3BL_IGNORE_PATH) {
+      href = location.protocol + '//' + location.hostname + location.pathname;
+      href += '?prefix=' + key;
+    } else {
+      if (keyText == '../') {
+        href = '../';
+      } else {
+        var parts = key.split('/');
+        href = parts[parts.length-2] + '/';
+      }
+    }
+  } else {
+    href = key;
+  }
   row += padRight(item.LastModified, cols[1]) + '  ';
   row += padRight(item.Size, cols[2]);
-  row += '<a href="'; 
-  row += key && key.indexOf('/') == -1 ? key : location.href.split('?')[0] + '?prefix=' + key;
-  row += '">' + keyText + '</a>';
+  row += '<a href="' + href + '">' + keyText + '</a>';
   content.push(row + '\n');
 }
 
