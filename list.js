@@ -8,6 +8,8 @@ jQuery(function($) {
     var s3_rest_url = location.protocol + '//' + location.hostname;
   }
 
+  s3_rest_url += '?delimiter=/';
+
   // handle pathes / prefixes - 2 options
   //
   // 1. Using the pathname
@@ -34,7 +36,7 @@ jQuery(function($) {
   if (prefix) {
     // make sure we end in /
     var prefix = prefix.replace(/\/$/, '') + '/';
-    s3_rest_url += '?prefix=' + prefix;
+    s3_rest_url += '&prefix=' + prefix;
   }
 
   // set loading notice
@@ -50,9 +52,20 @@ jQuery(function($) {
           Key: item.find('Key').text(),
           LastModified: item.find('LastModified').text(),
           Size: item.find('Size').text(),
+          Type: 'file'
         }
       });
-      renderTable(files, xml.find('Prefix').text());
+      var directories = $.map(xml.find('CommonPrefixes'), function(item) {
+        item = $(item);
+        return {
+          Key: item.find('Prefix').text(),
+          LastModified: '',
+          Size: '0',
+          Type: 'directory'
+        }
+      });
+      var outprefix = $(xml.find('Prefix')[0]).text();
+      renderTable(files.concat(directories), outprefix);
     })
     .fail(function(error) {
       alert('There was an error');
@@ -74,45 +87,41 @@ function renderTable(files, prefix) {
       // one directory up
       Key: prefix.replace(/\/$/, '').split('/').slice(0, -1).concat('').join('/'),
       LastModified: '',
-      Size: ''
+      Size: '',
+      keyText: '../',
+      href: '../'
     };
-    renderRow(item, cols, '../', content);
+    var row = renderRow(item, cols);
+    content.push(row + '\n');
   }
   
   $.each(files, function(idx, item) {
-    var suffix = item.Key.substring(prefix.length);
-    var slashCount = (suffix.split('/').length - 1);
-    if (slashCount == 0 || (slashCount == 1 && suffix.indexOf('/') == suffix.length - 1)) {
-      renderRow(item, cols, suffix, content);
+    // strip off the prefix
+    item.keyText = item.Key.substring(prefix.length);
+    if (item.Type === 'directory') {
+      if (S3BL_IGNORE_PATH) {
+        item.href = location.protocol + '//' + location.hostname + location.pathname + '?prefix=' + key;
+      } else {
+        item.href = item.keyText;
+      }
+    } else {
+      // TODO: need to fix this up for cases where we are on site not bucket
+      // in that case href for a file should point to s3 bucket
+      item.href = '/' + item.Key;
     }
+    var row = renderRow(item, cols);
+    content.push(row + '\n');
   });
 
   document.getElementById('listing').innerHTML = '<pre>' + content.join('') + '</pre>';
 }
 
-function renderRow(item, cols, keyText, content) {
-  var key = item.Key;
+function renderRow(item, cols) {
   var row = '';
-  var href;
-  if (key === '' || key[key.length-1] === '/') { // its a directory (note empty key is root directory)
-    if (S3BL_IGNORE_PATH) {
-      href = location.protocol + '//' + location.hostname + location.pathname;
-      href += '?prefix=' + key;
-    } else {
-      if (keyText == '../') {
-        href = '../';
-      } else {
-        var parts = key.split('/');
-        href = parts[parts.length-2] + '/';
-      }
-    }
-  } else {
-    href = key;
-  }
   row += padRight(item.LastModified, cols[1]) + '  ';
   row += padRight(item.Size, cols[2]);
-  row += '<a href="' + href + '">' + keyText + '</a>';
-  content.push(row + '\n');
+  row += '<a href="' + item.href + '">' + item.keyText + '</a>';
+  return row;
 }
 
 function padRight(padString, length) {
