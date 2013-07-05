@@ -83,15 +83,16 @@ function renderTable(files, prefix) {
   // and remove first item (which will be that directory)
   if (prefix) {
     files.shift();
-    var item = {
-      // one directory up
-      Key: prefix.replace(/\/$/, '').split('/').slice(0, -1).concat('').join('/'),
-      LastModified: '',
-      Size: '',
-      keyText: '../',
-      href: '../'
-    };
-    var row = renderRow(item, cols);
+        
+    var up = prefix.replace(/\/$/, '').split('/').slice(0, -1).concat('').join('/'), // one directory up
+        item = { 
+          Key: up,
+          LastModified: '',
+          Size: '',
+          keyText: '../',
+          href: S3BL_IGNORE_PATH ? '?prefix=' + up : '../'
+        },
+        row = renderRow(item, cols);
     content.push(row + '\n');
   }
   
@@ -100,7 +101,7 @@ function renderTable(files, prefix) {
     item.keyText = item.Key.substring(prefix.length);
     if (item.Type === 'directory') {
       if (S3BL_IGNORE_PATH) {
-        item.href = location.protocol + '//' + location.hostname + location.pathname + '?prefix=' + key;
+        item.href = location.protocol + '//' + location.hostname + location.pathname + '?prefix=' + item.Key;
       } else {
         item.href = item.keyText;
       }
