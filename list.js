@@ -100,7 +100,7 @@ function renderTable(files, prefix) {
     item.keyText = item.Key.substring(prefix.length);
     if (item.Type === 'directory') {
       if (S3BL_IGNORE_PATH) {
-        item.href = location.protocol + '//' + location.hostname + location.pathname + '?prefix=' + key;
+        item.href = location.protocol + '//' + location.hostname + location.pathname + '?prefix=' + item.keyText;
       } else {
         item.href = item.keyText;
       }
