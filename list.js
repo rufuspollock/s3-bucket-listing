@@ -90,7 +90,7 @@ function renderTable(files, prefix) {
           LastModified: '',
           Size: '',
           keyText: '../',
-          href: S3BL_IGNORE_PATH ? up : '../'
+          href: S3BL_IGNORE_PATH ? '?prefix=' + up : '../'
         },
         row = renderRow(item, cols);
     content.push(row + '\n');
