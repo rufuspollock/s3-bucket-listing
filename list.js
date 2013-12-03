@@ -40,7 +40,7 @@ jQuery(function($) {
   }
 
   // set loading notice
-  $('#listing').html('<h3>Loading <img src="http://assets.okfn.org/images/icons/ajaxload-circle.gif" /></h3>');
+  $('#listing').html('<h3>Loading <img src="//assets.okfn.org/images/icons/ajaxload-circle.gif" /></h3>');
   $.get(s3_rest_url)
     .done(function(data) {
       // clear loading notice
