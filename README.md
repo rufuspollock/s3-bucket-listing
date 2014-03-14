@@ -71,6 +71,39 @@ Note that US east region is **different** in that the S3 bucket endpoint does no
 * Website endpoint: http://example-bucket.s3-website-us-east-1.amazonaws.com/
 * S3 bucket endpoint (for RESTful calls): http://example-bucket.s3.amazonaws.com/
 
+#### S3 Website bucket permissions
+
+You must setup the S3 website bucket to allow public read access. 
+
+* Grant `Everyone` the `List` and `View` permissions:
+![List & View permissions(https://f.cloud.github.com/assets/227505/2409362/46c90dbe-aaad-11e3-9dee-10e967763770.png) 
+* Assign the following bucket policy:
+```
+{
+    "Version": "2008-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowPublicRead",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::{your-bucket-name}/*"
+        }
+    ]
+}
+```
+* Assign the following CORS policy
+```
+<CORSConfiguration>
+ <CORSRule>
+   <AllowedOrigin>*</AllowedOrigin>
+   <AllowedMethod>GET</AllowedMethod>
+   <AllowedHeader>*</AllowedHeader>
+ </CORSRule>
+</CORSConfiguration>
+```
 
 ## Copyright and License
 
