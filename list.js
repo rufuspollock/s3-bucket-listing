@@ -102,10 +102,7 @@ function renderTable(info) {
   content.push(new Array(cols[0] + cols[1] + cols[2] + 4).join('-') + '\n');
   
   // add the ../ at the start of the directory listing
-  // and remove first item (which will be that directory)
   if (prefix) {
-    files.shift();
-        
     var up = prefix.replace(/\/$/, '').split('/').slice(0, -1).concat('').join('/'), // one directory up
         item = { 
           Key: up,
