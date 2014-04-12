@@ -1,7 +1,26 @@
 if (typeof S3BL_IGNORE_PATH == 'undefined' || S3BL_IGNORE_PATH!=true) {
   var S3BL_IGNORE_PATH = false;
 }
+
 jQuery(function($) {
+  var s3_rest_url = createS3QueryUrl();
+  // set loading notice
+  $('#listing').html('<h3>Loading <img src="//assets.okfn.org/images/icons/ajaxload-circle.gif" /></h3>');
+  $.get(s3_rest_url)
+    .done(function(data) {
+      // clear loading notice
+      $('#listing').html('');
+      var xml = $(data);
+      var info = getInfoFromS3Data(xml);
+      renderTable(info);
+    })
+    .fail(function(error) {
+      alert('There was an error');
+      console.log(error);
+    });
+});
+
+function createS3QueryUrl() {
   if (typeof BUCKET_URL != 'undefined') {
     var s3_rest_url = BUCKET_URL;
   } else {
@@ -38,42 +57,45 @@ jQuery(function($) {
     var prefix = prefix.replace(/\/$/, '') + '/';
     s3_rest_url += '&prefix=' + prefix;
   }
+  return s3_rest_url;
+}
 
-  // set loading notice
-  $('#listing').html('<h3>Loading <img src="//assets.okfn.org/images/icons/ajaxload-circle.gif" /></h3>');
-  $.get(s3_rest_url)
-    .done(function(data) {
-      // clear loading notice
-      $('#listing').html('');
-      var xml = $(data);
-      var files = $.map(xml.find('Contents'), function(item) {
-        item = $(item);
-        return {
-          Key: item.find('Key').text(),
-          LastModified: item.find('LastModified').text(),
-          Size: item.find('Size').text(),
-          Type: 'file'
-        }
-      });
-      var directories = $.map(xml.find('CommonPrefixes'), function(item) {
-        item = $(item);
-        return {
-          Key: item.find('Prefix').text(),
-          LastModified: '',
-          Size: '0',
-          Type: 'directory'
-        }
-      });
-      var outprefix = $(xml.find('Prefix')[0]).text();
-      renderTable(files.concat(directories), outprefix);
-    })
-    .fail(function(error) {
-      alert('There was an error');
-      console.log(error);
-    });
-});
+function getInfoFromS3Data(xml) {
+  var files = $.map(xml.find('Contents'), function(item) {
+    item = $(item);
+    return {
+      Key: item.find('Key').text(),
+      LastModified: item.find('LastModified').text(),
+      Size: item.find('Size').text(),
+      Type: 'file'
+    }
+  });
+  var directories = $.map(xml.find('CommonPrefixes'), function(item) {
+    item = $(item);
+    return {
+      Key: item.find('Prefix').text(),
+      LastModified: '',
+      Size: '0',
+      Type: 'directory'
+    }
+  });
+  return {
+    files: files,
+    directories: directories,
+    prefix:  $(xml.find('Prefix')[0]).text()
+  }
+}
 
-function renderTable(files, prefix) {
+// info is object like:
+// {
+//    files: ..
+//    directories: ..
+//    prefix: ...
+// } 
+function renderTable(info) {
+  var files = info.files.concat(info.directories)
+    , prefix = info.prefix
+    ;
   var cols = [ 45, 30, 15 ];
   var content = [];
   content.push(padRight('Last Modified', cols[1]) + '  ' + padRight('Size', cols[2]) + 'Key \n');
@@ -96,7 +118,7 @@ function renderTable(files, prefix) {
     content.push(row + '\n');
   }
   
-  $.each(files, function(idx, item) {
+  jQuery.each(files, function(idx, item) {
     // strip off the prefix
     item.keyText = item.Key.substring(prefix.length);
     if (item.Type === 'directory') {
