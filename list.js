@@ -1,48 +1,52 @@
-if (typeof S3BL_IGNORE_PATH == 'undefined' || S3BL_IGNORE_PATH!=true) {
+
+/***************************************** 
+*
+* Amazon S3 Bucket Setup
+* 1. Enable website mode on S3 interface
+* 2. Enable the security policy in readme
+* 3. Enable the CORS policy in readme
+* 4. Enable view privileges for "Everyone"
+*
+*****************************************/
+
+// Uncomment these variables if using Amazon S3 Bucket
+//var S3BL_IGNORE_PATH = true;
+//var BUCKET_URL = 'your.bucket.url.com'; // use the url that does not contain 'website'
+
+// Files to exclude
+var exclude = ['index.html', 'list.js'];
+
+if (typeof S3BL_IGNORE_PATH == 'undefined' || S3BL_IGNORE_PATH != true) {
   var S3BL_IGNORE_PATH = false;
 }
 
 jQuery(function($) {
   var s3_rest_url = createS3QueryUrl();
-  // set loading notice
-  $('#listing').html('<h3>Loading <img src="//assets.okfn.org/images/icons/ajaxload-circle.gif" /></h3>');
+  // Loading Message
+  $('#listing').html('<h4>Loading Index...</h4>');
   $.get(s3_rest_url)
-    .done(function(data) {
-      // clear loading notice
-      $('#listing').html('');
-      var xml = $(data);
-      var info = getInfoFromS3Data(xml);
-      renderTable(info);
+  .done(function(data) {
+    $('#listing').html('');
+    var xml = $(data);
+    var info = getInfoFromS3Data(xml);
+    renderTable(info);
     })
-    .fail(function(error) {
-      alert('There was an error');
-      console.log(error);
-    });
+  .fail(function(error) {
+    // Error Message
+    alert('There was an error');
+    console.log(error);
+  });
 });
 
+// Support for non-s3 directories
 function createS3QueryUrl() {
   if (typeof BUCKET_URL != 'undefined') {
     var s3_rest_url = BUCKET_URL;
-  } else {
+  } 
+  else {
     var s3_rest_url = location.protocol + '//' + location.hostname;
   }
-
   s3_rest_url += '?delimiter=/';
-
-  // handle pathes / prefixes - 2 options
-  //
-  // 1. Using the pathname
-  // {bucket}/{path} => prefix = {path}
-  // 
-  // 2. Using ?prefix={prefix}
-  //
-  // Why both? Because we want classic directory style listing in normal
-  // buckets but also allow deploying to non-buckets
-  //
-  // Can explicitly disable using path (useful if *not* deploying to an s3
-  // bucket) by setting
-  //
-  // S3BL_IGNORE_PATH = true
   var rx = /.*[?&]prefix=([^&]+)(&.*)?$/;
   var prefix = '';
   if (S3BL_IGNORE_PATH==false) {
@@ -53,7 +57,6 @@ function createS3QueryUrl() {
     prefix = match[1];
   }
   if (prefix) {
-    // make sure we end in /
     var prefix = prefix.replace(/\/$/, '') + '/';
     s3_rest_url += '&prefix=' + prefix;
   }
@@ -70,6 +73,7 @@ function getInfoFromS3Data(xml) {
       Type: 'file'
     }
   });
+  
   var directories = $.map(xml.find('CommonPrefixes'), function(item) {
     item = $(item);
     return {
@@ -79,6 +83,7 @@ function getInfoFromS3Data(xml) {
       Type: 'directory'
     }
   });
+  
   return {
     files: files,
     directories: directories,
@@ -86,53 +91,48 @@ function getInfoFromS3Data(xml) {
   }
 }
 
-// info is object like:
-// {
-//    files: ..
-//    directories: ..
-//    prefix: ...
-// } 
 function renderTable(info) {
-  var files = info.files.concat(info.directories)
-    , prefix = info.prefix
-    ;
+  var files = info.files.concat(info.directories), prefix = info.prefix;
   var cols = [ 45, 30, 15 ];
   var content = [];
   content.push(padRight('Last Modified', cols[1]) + '  ' + padRight('Size', cols[2]) + 'Key \n');
   content.push(new Array(cols[0] + cols[1] + cols[2] + 4).join('-') + '\n');
-  
-  // add the ../ at the start of the directory listing
+
   if (prefix) {
     var up = prefix.replace(/\/$/, '').split('/').slice(0, -1).concat('').join('/'), // one directory up
-        item = { 
-          Key: up,
-          LastModified: '',
-          Size: '',
-          keyText: '../',
-          href: S3BL_IGNORE_PATH ? '?prefix=' + up : '../'
-        },
-        row = renderRow(item, cols);
+      item = { 
+        Key: up,
+        LastModified: '',
+        Size: '',
+        keyText: '../',
+        href: S3BL_IGNORE_PATH ? '?prefix=' + up : '../'
+      },
+      row = renderRow(item, cols);
     content.push(row + '\n');
   }
   
   jQuery.each(files, function(idx, item) {
-    // strip off the prefix
     item.keyText = item.Key.substring(prefix.length);
     if (item.Type === 'directory') {
       if (S3BL_IGNORE_PATH) {
         item.href = location.protocol + '//' + location.hostname + location.pathname + '?prefix=' + item.Key;
-      } else {
+      } 
+      else {
         item.href = item.keyText;
       }
-    } else {
+    } 
+    else {
       // TODO: need to fix this up for cases where we are on site not bucket
       // in that case href for a file should point to s3 bucket
       item.href = '/' + item.Key;
     }
-    var row = renderRow(item, cols);
-    content.push(row + '\n');
+    
+    // file exclusions
+    if(jQuery.inArray(item.keyText, exclude) == -1) {
+      var row = renderRow(item, cols);
+      content.push(row + '\n');
+    }
   });
-
   document.getElementById('listing').innerHTML = '<pre>' + content.join('') + '</pre>';
 }
 
@@ -154,4 +154,3 @@ function padRight(padString, length) {
   }
   return str;
 }
-
