@@ -4,6 +4,12 @@ The listing can be deployed on any site and can also be deployed into a bucket.
 
 Inspiration from http://aws.amazon.com/code/Amazon-S3/1713
 
+## Live Demo
+
+If you want to see an example of this script in action check out:
+
+<http://data.openspending.org/>
+
 ## Usage
 
 Copy these 3 lines into the HTML file where you want the listing to show up:
