@@ -18,7 +18,7 @@ function getS3Data(marker, html) {
       if (info.nextMarker != "null") {
         getS3Data(info.nextMarker, html);
       } else {
-        renderTable(html);
+        document.getElementById('listing').innerHTML = '<pre>' + html + '</pre>';
       }
     })
     .fail(function(error) {
@@ -150,10 +150,6 @@ function prepareTable(info) {
   });
 
   return content.join('');
-}
-
-function renderTable(html) {
-  document.getElementById('listing').innerHTML = '<pre>' + html + '</pre>';
 }
 
 function renderRow(item, cols) {
