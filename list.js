@@ -143,7 +143,7 @@ function prepareTable(info) {
     } else {
       // TODO: need to fix this up for cases where we are on site not bucket
       // in that case href for a file should point to s3 bucket
-      item.href = '/' + item.Key;
+      item.href = '/' + encodeURIComponent(item.Key);
     }
     var row = renderRow(item, cols);
     content.push(row + '\n');
