@@ -2,7 +2,9 @@ if (typeof S3BL_IGNORE_PATH == 'undefined' || S3BL_IGNORE_PATH!=true) {
   var S3BL_IGNORE_PATH = false;
 }
 
-getS3Data();
+jQuery(function($) {
+  getS3Data();
+});
 
 function getS3Data(marker, html) {
   var s3_rest_url = createS3QueryUrl(marker);
