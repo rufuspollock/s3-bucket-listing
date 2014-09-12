@@ -3,7 +3,11 @@ if (typeof S3BL_IGNORE_PATH == 'undefined' || S3BL_IGNORE_PATH!=true) {
 }
 
 jQuery(function($) {
-  var s3_rest_url = createS3QueryUrl();
+  getS3Data();
+});
+
+function getS3Data(marker, html) {
+  var s3_rest_url = createS3QueryUrl(marker);
   // set loading notice
   $('#listing').html('<h3>Loading <img src="//assets.okfn.org/images/icons/ajaxload-circle.gif" /></h3>');
   $.get(s3_rest_url)
@@ -12,15 +16,20 @@ jQuery(function($) {
       $('#listing').html('');
       var xml = $(data);
       var info = getInfoFromS3Data(xml);
-      renderTable(info);
+      html = typeof html !== 'undefined' ? html + prepareTable(info) : prepareTable(info);
+      if (info.nextMarker != "null") {
+        getS3Data(info.nextMarker, html);
+      } else {
+        document.getElementById('listing').innerHTML = '<pre>' + html + '</pre>';
+      }
     })
     .fail(function(error) {
       alert('There was an error');
       console.log(error);
     });
-});
+}
 
-function createS3QueryUrl() {
+function createS3QueryUrl(marker) {
   if (typeof BUCKET_URL != 'undefined') {
     var s3_rest_url = BUCKET_URL;
   } else {
@@ -57,6 +66,9 @@ function createS3QueryUrl() {
     var prefix = prefix.replace(/\/$/, '') + '/';
     s3_rest_url += '&prefix=' + prefix;
   }
+  if (marker) {
+    s3_rest_url += '&marker=' + marker;
+  }
   return s3_rest_url;
 }
 
@@ -79,10 +91,16 @@ function getInfoFromS3Data(xml) {
       Type: 'directory'
     }
   });
+  if ($(xml.find('IsTruncated')[0]).text() == 'true') {
+    var nextMarker = $(xml.find('NextMarker')[0]).text();
+  } else {
+    var nextMarker = null;
+  }
   return {
     files: files,
     directories: directories,
-    prefix:  $(xml.find('Prefix')[0]).text()
+    prefix: $(xml.find('Prefix')[0]).text(),
+    nextMarker: encodeURIComponent(nextMarker)
   }
 }
 
@@ -92,7 +110,7 @@ function getInfoFromS3Data(xml) {
 //    directories: ..
 //    prefix: ...
 // } 
-function renderTable(info) {
+function prepareTable(info) {
   var files = info.files.concat(info.directories)
     , prefix = info.prefix
     ;
@@ -100,21 +118,21 @@ function renderTable(info) {
   var content = [];
   content.push(padRight('Last Modified', cols[1]) + '  ' + padRight('Size', cols[2]) + 'Key \n');
   content.push(new Array(cols[0] + cols[1] + cols[2] + 4).join('-') + '\n');
-  
+
   // add the ../ at the start of the directory listing
   if (prefix) {
     var up = prefix.replace(/\/$/, '').split('/').slice(0, -1).concat('').join('/'), // one directory up
-        item = { 
-          Key: up,
-          LastModified: '',
-          Size: '',
-          keyText: '../',
-          href: S3BL_IGNORE_PATH ? '?prefix=' + up : '../'
-        },
-        row = renderRow(item, cols);
+      item = {
+        Key: up,
+        LastModified: '',
+        Size: '',
+        keyText: '../',
+        href: S3BL_IGNORE_PATH ? '?prefix=' + up : '../'
+      },
+      row = renderRow(item, cols);
     content.push(row + '\n');
   }
-  
+
   jQuery.each(files, function(idx, item) {
     // strip off the prefix
     item.keyText = item.Key.substring(prefix.length);
@@ -127,13 +145,13 @@ function renderTable(info) {
     } else {
       // TODO: need to fix this up for cases where we are on site not bucket
       // in that case href for a file should point to s3 bucket
-      item.href = '/' + item.Key;
+      item.href = '/' + encodeURIComponent(item.Key);
     }
     var row = renderRow(item, cols);
     content.push(row + '\n');
   });
 
-  document.getElementById('listing').innerHTML = '<pre>' + content.join('') + '</pre>';
+  return content.join('');
 }
 
 function renderRow(item, cols) {
@@ -154,4 +172,3 @@ function padRight(padString, length) {
   }
   return str;
 }
-
