@@ -82,8 +82,9 @@ Note that US east region is **different** in that the S3 bucket endpoint does no
 You must setup the S3 website bucket to allow public read access. 
 
 * Grant `Everyone` the `List` and `View` permissions:
-![List & View permissions(https://f.cloud.github.com/assets/227505/2409362/46c90dbe-aaad-11e3-9dee-10e967763770.png) 
-* Assign the following bucket policy:
+![List & View permissions](https://f.cloud.github.com/assets/227505/2409362/46c90dbe-aaad-11e3-9dee-10e967763770.png) 
+ * Alternatively you can assign the following bucket policy if policies are your thing:
+
 ```
 {
     "Version": "2008-10-17",
