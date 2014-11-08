@@ -25,6 +25,7 @@ function getS3Data(marker, html) {
     })
     .fail(function(error) {
       console.error(error);
+      $('#listing').html('<strong>Error: ' + error + '</strong>');
     });
 }
 
