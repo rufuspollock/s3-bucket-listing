@@ -54,7 +54,7 @@ By default, the script will attempt to guess the bucket based on the url you
 are trying to access. However, you can configure it to point at any s3 bucket
 by setting the `BUCKET_URL` javascript variable, e.g.:
 
-    var BUCKET_URL = 'http://data.openspending.org.s3-eu-west-1.amazonaws.com';
+    var BUCKET_URL = 'https://s3-eu-west-1.amazonaws.com/data.openspending.org/';
 
 ### S3 Website buckets
 
