@@ -17,10 +17,10 @@ Copy these 3 lines into the HTML file where you want the listing to show up:
     <div id="listing"></div>
 
     <!-- add jquery - if you already have it just ignore this line -->
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 
     <!-- the JS to the do the listing -->
-    <script src="http://rgrp.github.io/s3-bucket-listing/list.js"></script>
+    <script src="https://rgrp.github.io/s3-bucket-listing/list.js"></script>
 
 We've provided an example [index.html file][index] you can just copy if you want.
 
