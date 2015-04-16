@@ -30,6 +30,7 @@ We've provided an example [index.html file][index] you can just copy if you want
 
 * You probably want to put this in an index.html in the root of your s3 bucket
 * You may want to turn on website mode for your s3 bucket.
+* Set both the Index Document and Error Document to index.html.
 * **Note** for s3 buckets in website mode you must explicitly configure the
   bucket url - see below for details and explanation of why this is necessary.
 
