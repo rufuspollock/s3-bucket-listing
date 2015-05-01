@@ -125,7 +125,7 @@ You must setup the S3 website bucket to allow public read access.
 </CORSConfiguration>
 ```
 
-### S3 Bucket https permissions (ie. deny http access)
+### S3 Bucket https only permissions (ie. deny http access)
 
 This is only possible in non-website mode with URL-navigation off.
 
@@ -163,6 +163,18 @@ Set the following bucket policy
 	]
 }
 ```
+
+To stop browser warnings about displaying insecure content in secure mode,
+host the following 3 files in your bucket:
+list.js
+http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js
+http://assets.okfn.org/images/icons/ajaxload-circle.gif
+
+Edit index.html to point to your bucket's jquery.min.js & list.js file (using relative paths)
+Edit list.js to point to your bucket's ajaxload-circle.gif
+
+You will now be in full https, and be utilising amazonaws' wildcard SSL (albeit using SHA1).
+
 
 ## Copyright and License
 
