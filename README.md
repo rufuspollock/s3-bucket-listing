@@ -29,9 +29,7 @@ We've provided an example [index.html file][index] you can just copy if you want
 ### Tips for S3 buckets
 
 * You probably want to put this in an index.html in the root of your s3 bucket
-* You may want to turn on website mode for your s3 bucket.
-* **Note** for s3 buckets in website mode you must explicitly configure the
-  bucket url - see below for details and explanation of why this is necessary.
+* You can use your S3 bucket in website mode, or non website mode.
 
 ### Tips for normal websites
 
@@ -48,6 +46,8 @@ To disable set the following javascript variable:
 
     S3BL_IGNORE_PATH = true;
 
+This will then use the ?prefix= mode.
+
 ### Configuring the Bucket to List
 
 By default, the script will attempt to guess the bucket based on the url you
@@ -56,7 +56,13 @@ by setting the `BUCKET_URL` javascript variable, e.g.:
 
     var BUCKET_URL = 'https://s3-eu-west-1.amazonaws.com/data.openspending.org/';
 
-### S3 Website buckets
+### S3 Website buckets in website mode
+
+You cannot use HTTPS mode (Amazon S3 doesn't support this).
+
+For s3 buckets in website mode and URL based navigation, you have to set your index
+document AND your error document to index.html. If you do not do this, your browser
+will expect an index.html in every subfolder.
 
 For S3 buckets configured in website mode the standard approach will not work
 because a GET request on the bucket root returns the site index page rather
@@ -77,7 +83,14 @@ Note that US east region is **different** in that the S3 bucket endpoint does no
 * Website endpoint: http://example-bucket.s3-website-us-east-1.amazonaws.com/
 * S3 bucket endpoint (for RESTful calls): http://example-bucket.s3.amazonaws.com/
 
-#### S3 Website bucket permissions
+### S3 buckets in non-website mode
+
+You can use https mode for this (see below).
+
+You HAVE to turn off URL-based navigation (see above).
+You MUST link to http://example-bucket.s3.amazonaws.com/index.html (or https)
+
+#### S3 website bucket permissions
 
 You must setup the S3 website bucket to allow public read access. 
 
@@ -111,6 +124,57 @@ You must setup the S3 website bucket to allow public read access.
  </CORSRule>
 </CORSConfiguration>
 ```
+
+### S3 Bucket https only permissions (ie. deny http access)
+
+This is only possible in non-website mode with URL-navigation off.
+
+Set the following bucket policy
+```
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "HTTPSOnly",
+			"Effect": "Deny",
+			"Principal": "*",
+			"Action": "s3:*",
+			"Resource": "arn:aws:s3:::{your-bucket-name}/*",
+			"Condition": {
+				"Bool": {
+					"aws:SecureTransport": false
+				}
+			}
+		},
+		{
+			"Sid": "AllowPublicRead",
+			"Effect": "Allow",
+			"Principal": "*",
+			"Action": "s3:GetObject",
+			"Resource": "arn:aws:s3:::{your-bucket-name}/*"
+		},
+		{
+			"Sid": "AllowPublicList",
+			"Effect": "Allow",
+			"Principal": "*",
+			"Action": "s3:ListBucket",
+			"Resource": "arn:aws:s3:::{your-bucket-name}"
+		}
+	]
+}
+```
+
+To stop browser warnings about displaying insecure content in secure mode,
+host the following 3 files in your bucket:
+list.js
+http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js
+http://assets.okfn.org/images/icons/ajaxload-circle.gif
+
+Edit index.html to point to your bucket's jquery.min.js & list.js file (using relative paths)
+Edit list.js to point to your bucket's ajaxload-circle.gif
+
+You will now be in full https, and be utilising amazonaws' wildcard SSL (albeit using SHA1).
+
 
 ## Copyright and License
 
