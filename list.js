@@ -2,6 +2,14 @@ if (typeof S3BL_IGNORE_PATH == 'undefined' || S3BL_IGNORE_PATH!=true) {
   var S3BL_IGNORE_PATH = false;
 }
 
+if (typeof BUCKET_URL == 'undefined') {
+  var BUCKET_URL = location.protocol + '//' + location.hostname;
+}
+
+if (typeof S3BL_ROOT_DIR == 'undefined') {
+  var S3BL_ROOT_DIR = '';
+}
+
 jQuery(function($) {
   getS3Data();
 });
@@ -30,36 +38,35 @@ function getS3Data(marker, html) {
 }
 
 function createS3QueryUrl(marker) {
-  if (typeof BUCKET_URL != 'undefined') {
-    var s3_rest_url = BUCKET_URL;
-  } else {
-    var s3_rest_url = location.protocol + '//' + location.hostname;
-  }
-
+  var s3_rest_url = BUCKET_URL;
   s3_rest_url += '?delimiter=/';
 
-  // handle pathes / prefixes - 2 options
   //
-  // 1. Using the pathname
+  // Handling paths and prefixes:
+  //
+  // 1. S3BL_IGNORE_PATH = false
+  // Uses the pathname
   // {bucket}/{path} => prefix = {path}
-  // 
-  // 2. Using ?prefix={prefix}
+  //
+  // 2. S3BL_IGNORE_PATH = true
+  // Uses ?prefix={prefix}
   //
   // Why both? Because we want classic directory style listing in normal
   // buckets but also allow deploying to non-buckets
   //
-  // Can explicitly disable using path (useful if *not* deploying to an s3
-  // bucket) by setting
-  //
-  // S3BL_IGNORE_PATH = true
+
   var rx = /.*[?&]prefix=([^&]+)(&.*)?$/;
   var prefix = '';
   if (S3BL_IGNORE_PATH==false) {
-    var prefix = location.pathname.replace(/^\//, '');
+    var prefix = location.pathname.replace(/^\//, S3BL_ROOT_DIR);
   }
   var match = location.search.match(rx);
   if (match) {
     prefix = match[1];
+  } else {
+    if (S3BL_IGNORE_PATH) {
+      var prefix = S3BL_ROOT_DIR;
+    }
   }
   if (prefix) {
     // make sure we end in /
@@ -143,9 +150,7 @@ function prepareTable(info) {
         item.href = item.keyText;
       }
     } else {
-      // TODO: need to fix this up for cases where we are on site not bucket
-      // in that case href for a file should point to s3 bucket
-      item.href = '/' + encodeURIComponent(item.Key);
+      item.href = BUCKET_URL + '/' + encodeURIComponent(item.Key);
       item.href = item.href.replace(/%2F/g, '/');
     }
     var row = renderRow(item, cols);
