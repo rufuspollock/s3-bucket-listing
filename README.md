@@ -19,78 +19,126 @@ Copy these 3 lines into the HTML file where you want the listing to show up:
     <!-- add jquery - if you already have it just ignore this line -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 
+    <!-- the JS variables for the listing -->
+    <script type="text/javascript">
+      // var S3BL_IGNORE_PATH = true;
+      // var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
+      // var S3B_ROOT_DIR = 'SUBDIR_L1/SUBDIR_L2/';
+    </script>
+
     <!-- the JS to the do the listing -->
     <script src="https://rgrp.github.io/s3-bucket-listing/list.js"></script>
 
-We've provided an example [index.html file][index] you can just copy if you want.
+We've provided an example [index.html][index] file you can just copy if you want.
 
 [index]: https://github.com/rgrp/s3-bucket-listing/blob/gh-pages/index.html
 
-### Tips for S3 buckets
 
-* You probably want to put this in an index.html in the root of your s3 bucket
-* You can use your S3 bucket in website mode, or non website mode.
+## How it works
+The script downloads your XML bucket listing, parses it and simulates a webserver's text-based directory browsing mode.
 
-### Tips for normal websites
 
-* Copy the code into whatever file you want to act as your listing page.
-* You will need to set the bucket to list - see below
-* You probably want to turn off URL-based navigation.
+#### S3BL_IGNORE_PATH variable
+Valid options = `false` (default) or `true`
 
-### Turning off URL based navigation
+Setting this to false will cause URL navigation to be in this form:
+- _`http://data.openspending.org/worldbank/cameroon/`_
 
-By default the scripts attempts to use the URL path (/xyz/abc/) to do directory
-style navigation. You may not want this (e.g. if deploying to a website page).
+You will have to put the html code in your page html AND your error 404 document.
 
-To disable set the following javascript variable:
+Setting this to true will cause URL navigation to be in this form:
+- _`http://data.openspending.org/index.html?prefix=worldbank/cameroon/`_
 
-    S3BL_IGNORE_PATH = true;
 
-This will then use the ?prefix= mode.
+#### BUCKET_URL variable
+Valid options = `''` (default) or your _bucket URL_, e.g.
 
-### Configuring the Bucket to List
+`https://BUCKET.s3-REGION.amazonaws.com` (both http & https are valid)
 
-By default, the script will attempt to guess the bucket based on the url you
-are trying to access. However, you can configure it to point at any s3 bucket
-by setting the `BUCKET_URL` javascript variable, e.g.:
+- Do __NOT__ put a trailing '/', e.g. `https://BUCKET.s3-REGION.amazonaws.com/`
+- Do __NOT__ put S3 website URL, e.g. `https://BUCKET.s3-website-REGION.amazonaws.com`
 
-    var BUCKET_URL = 'https://s3-eu-west-1.amazonaws.com/data.openspending.org/';
+This variable tells the script where your bucket XML listing is, and where the files are.
+If the variable is left empty, the script will use the same hostname as the _index.html_.
 
-### S3 Website buckets in website mode
 
-You cannot use HTTPS mode (Amazon S3 doesn't support this).
+#### S3B_ROOT_DIR variable
+Valid options = `''` (default) or `'SUBDIR_L1/'` or `'SUBDIR_L1/SUBDIR_L2/'` or etc.
 
-For s3 buckets in website mode and URL based navigation, you have to set your index
-document AND your error document to index.html. If you do not do this, your browser
-will expect an index.html in every subfolder.
+- Do __NOT__ put a leading '/',     e.g. `'/SUBDIR_L1/'`
+- Do __NOT__ omit the trailing '/', e.g. `'SUBDIR_L1'`
 
-For S3 buckets configured in website mode the standard approach will not work
-because a GET request on the bucket root returns the site index page rather
-than the object listing in JSON form.
+This will disallow navigation shallower than your set directory.
 
-Thus, you have to set the `BUCKET_URL` variable to be the S3 bucket endpoint
-which *differs* from the website S3 bucket endpoint. For more details see:
+Note that this only disallows navigation to shallower directories, but __NOT__ access. Any person with knowledge of the existence of bucket XML listings will be able to manually access those files.
+
+Use Amazon S3 permissions to set granular file permissions.
+
+
+## Four Valid Configurations
+1. Embed into your website
+2. Use Amazon S3 in website mode with URL navigation
+3. Use Amazon S3 in website mode with prefix mode (ignore_path mode)
+4. Use Amazon S3 in non-website mode
+
+
+#### 1. Embed into your website
+Mandatory settings:
+```
+      var S3BL_IGNORE_PATH = true;
+      var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
+```
+Copy the code into whatever file you want to act as your listing page.
+
+
+#### 2. Use Amazon S3 in website mode with URL navigation
+Mandatory settings:
+```
+      var S3BL_IGNORE_PATH = false;
+      var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
+```
+- Enable website hosting under `Static website hosting` in your S3 bucket settings.
+- Enter `index.html` as your `Index Document` and `Error Document`.
+- Put _index.html_ in your bucket.
+- Navigate to _`http://BUCKET.s3-website-REGION.amazonaws.com`_ to access the script.
+
+The _`-website-`_ in the URL is important, as the non-website URL is what serves your XML Bucket List.
 
 <http://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteEndpoints.html#WebsiteRestEndpointDiff>
 
 A specific example for the EU west region:
 
-* Website endpoint: http://example-bucket.s3-website-eu-west-1.amazonaws.com/
-* S3 bucket endpoint (for RESTful calls): http://example-bucket.s3-eu-west-1.amazonaws.com/
+* Website endpoint: _`http://example-bucket.s3-website-eu-west-1.amazonaws.com/`_
+* S3 bucket endpoint (for RESTful calls): _`http://example-bucket.s3-eu-west-1.amazonaws.com/`_
 
 Note that US east region is **different** in that the S3 bucket endpoint does not include a location spec but the website version does:
 
-* Website endpoint: http://example-bucket.s3-website-us-east-1.amazonaws.com/
-* S3 bucket endpoint (for RESTful calls): http://example-bucket.s3.amazonaws.com/
+* Website endpoint: _`http://example-bucket.s3-website-us-east-1.amazonaws.com/`_
+* S3 bucket endpoint (for RESTful calls): _`http://example-bucket.s3.amazonaws.com/`_
 
-### S3 buckets in non-website mode
 
-You can use https mode for this (see below).
+#### 3. Use Amazon S3 in website mode with prefix mode (ignore_path mode)
+Mandatory settings:
+```
+      var S3BL_IGNORE_PATH = true;
+      var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
+```
+- Enable website hosting under `Static website hosting` in your S3 bucket settings.
+- Enter `index.html` as your `Index Document` (Error Document is not required).
+- Put _index.html_ in your bucket.
+- Navigate to _`http://BUCKET.s3-website-REGION.amazonaws.com`_ to access the script.
 
-You HAVE to turn off URL-based navigation (see above).
-You MUST link to http://example-bucket.s3.amazonaws.com/index.html (or https)
 
-#### S3 website bucket permissions
+#### 4. Use Amazon S3 in non-website mode
+Mandatory settings:
+```
+      var S3BL_IGNORE_PATH = true;
+```
+- Put _index.html_ in your bucket.
+- Use the _index.html_'s full path to access the script, e.g. _`http://BUCKET.s3-REGION.amazonaws.com/index.html`_
+
+
+## S3 website bucket permissions
 
 You must setup the S3 website bucket to allow public read access. 
 
@@ -125,9 +173,28 @@ You must setup the S3 website bucket to allow public read access.
 </CORSConfiguration>
 ```
 
+
+## Enabling HTTPS
+You MUST use config 1 or 4. Amazon S3 doesn't support HTTPS in website mode.
+
+Use https for your BUCKET_URL.
+
+For config 4, navigate to your index.html's full path using https, e.g. _`https://BUCKET.s3-REGION.amazonaws.com/index.html`_
+
+To stop browser warnings about displaying insecure content in secure mode:
+- Host the following 3 files in your website/bucket:
+  - _list.js_
+  - http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js
+  - http://assets.okfn.org/images/icons/ajaxload-circle.gif
+- Edit _index.html_ to point to your bucket's `jquery.min.js` & `list.js` file (using relative paths)
+- Edit _list.js_ to point to your bucket's `ajaxload-circle.gif`
+
+With config 4, you will then be utilising AmazonAWS' wildcard SSL (unfortunately it is SHA1 only).
+
+
 ### S3 Bucket https only permissions (ie. deny http access)
 
-This is only possible in non-website mode with URL-navigation off.
+This is only possible for config 1 or 4.
 
 Set the following bucket policy
 ```
@@ -163,17 +230,6 @@ Set the following bucket policy
 	]
 }
 ```
-
-To stop browser warnings about displaying insecure content in secure mode,
-host the following 3 files in your bucket:
-list.js
-http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js
-http://assets.okfn.org/images/icons/ajaxload-circle.gif
-
-Edit index.html to point to your bucket's jquery.min.js & list.js file (using relative paths)
-Edit list.js to point to your bucket's ajaxload-circle.gif
-
-You will now be in full https, and be utilising amazonaws' wildcard SSL (albeit using SHA1).
 
 
 ## Copyright and License
