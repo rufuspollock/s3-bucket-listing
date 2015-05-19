@@ -55,7 +55,7 @@ function createS3QueryUrl(marker) {
   // buckets but also allow deploying to non-buckets
   //
 
-  var rx = /.*[?&]prefix=([^&]+)(&.*)?$/;
+  var rx = '.*[?&]prefix=' + S3BL_ROOT_DIR + '([^&]+)(&.*)?$';
   var prefix = '';
   if (S3BL_IGNORE_PATH==false) {
     var prefix = location.pathname.replace(/^\//, S3BL_ROOT_DIR);
