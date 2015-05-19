@@ -6,8 +6,8 @@ if (typeof BUCKET_URL == 'undefined') {
   var BUCKET_URL = location.protocol + '//' + location.hostname;
 }
 
-if (typeof S3BL_ROOT_DIR == 'undefined') {
-  var S3BL_ROOT_DIR = '';
+if (typeof S3B_ROOT_DIR == 'undefined') {
+  var S3B_ROOT_DIR = '';
 }
 
 jQuery(function($) {
@@ -55,17 +55,17 @@ function createS3QueryUrl(marker) {
   // buckets but also allow deploying to non-buckets
   //
 
-  var rx = '.*[?&]prefix=' + S3BL_ROOT_DIR + '([^&]+)(&.*)?$';
+  var rx = '.*[?&]prefix=' + S3B_ROOT_DIR + '([^&]+)(&.*)?$';
   var prefix = '';
   if (S3BL_IGNORE_PATH==false) {
-    var prefix = location.pathname.replace(/^\//, S3BL_ROOT_DIR);
+    var prefix = location.pathname.replace(/^\//, S3B_ROOT_DIR);
   }
   var match = location.search.match(rx);
   if (match) {
-    prefix = S3BL_ROOT_DIR + match[1];
+    prefix = S3B_ROOT_DIR + match[1];
   } else {
     if (S3BL_IGNORE_PATH) {
-      var prefix = S3BL_ROOT_DIR;
+      var prefix = S3B_ROOT_DIR;
     }
   }
   if (prefix) {
