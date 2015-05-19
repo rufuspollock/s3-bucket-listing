@@ -62,7 +62,7 @@ function createS3QueryUrl(marker) {
   }
   var match = location.search.match(rx);
   if (match) {
-    prefix = match[1];
+    prefix = S3BL_ROOT_DIR + match[1];
   } else {
     if (S3BL_IGNORE_PATH) {
       var prefix = S3BL_ROOT_DIR;
