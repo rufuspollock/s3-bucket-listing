@@ -165,8 +165,12 @@ function prepareTable(info) {
       item.href = BUCKET_URL + '/' + encodeURIComponent(item.Key);
       item.href = item.href.replace(/%2F/g, '/');
     }
-    var row = renderRow(item, cols);
-    content.push(row + '\n');
+    // Don't display the row unless keyText length is greater than zero
+    // keyText is zero length for the directory placeholder (because it is categorized as a file)
+    if (item.keyText.length) {
+        var row = renderRow(item, cols);
+        content.push(row + '\n');
+    }
   });
 
   return content.join('');
