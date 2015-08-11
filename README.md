@@ -22,6 +22,7 @@ Copy these 3 lines into the HTML file where you want the listing to show up:
     <!-- the JS variables for the listing -->
     <script type="text/javascript">
       // var S3BL_IGNORE_PATH = true;
+      // var BUCKET_NAME = 'BUCKET';
       // var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
       // var S3B_ROOT_DIR = 'SUBDIR_L1/SUBDIR_L2/';
     </script>
@@ -48,6 +49,17 @@ You will have to put the html code in your page html AND your error 404 document
 
 Setting this to true will cause URL navigation to be in this form:
 - _`http://data.openspending.org/index.html?prefix=worldbank/cameroon/`_
+
+
+#### BUCKET_NAME variable
+Valid options = `''` (default) or your _bucket name_, e.g.
+
+`BUCKET`
+
+This option is designed to support access to S3 buckets in non-website mode,
+via both path-style and virtualhost-style urls. See the [Amazon Documentation](
+http://docs.aws.amazon.com/AmazonS3/latest/dev/VirtualHosting.html) for details
+on the difference.
 
 
 #### BUCKET_URL variable
@@ -133,9 +145,9 @@ Mandatory settings:
 Mandatory settings:
 ```
       var S3BL_IGNORE_PATH = true;
+      var BUCKET_NAME = 'BUCKET';
 ```
 - Put _index.html_ in your bucket.
-- Use the _index.html_'s full path to access the script, e.g. _`http://BUCKET.s3-REGION.amazonaws.com/index.html`_
 
 
 ## S3 website bucket permissions
