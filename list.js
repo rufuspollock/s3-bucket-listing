@@ -102,7 +102,7 @@ function getInfoFromS3Data(xml) {
     return {
       Key: item.find('Prefix').text(),
       LastModified: '',
-      Size: '0',
+      Size: 'dir',
       Type: 'directory'
     }
   });
@@ -144,7 +144,7 @@ function prepareTable(info) {
       item = {
         Key: up,
         LastModified: '',
-        Size: '',
+        Size: 'dir',
         keyText: '../',
         href: S3BL_IGNORE_PATH ? '?prefix=' + up : '../'
       },
