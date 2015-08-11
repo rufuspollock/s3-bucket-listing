@@ -9,7 +9,7 @@ if (typeof BUCKET_URL == 'undefined') {
 if (typeof BUCKET_NAME != 'undefined') {
     // if bucket_url does not start with bucket_name,
     // assume path-style url
-    if (!~BUCKET_URL.indexof(location.protocol + '//' + BUCKET_NAME)) {
+    if (!~BUCKET_URL.indexOf(location.protocol + '//' + BUCKET_NAME)) {
         BUCKET_URL += '/' + BUCKET_NAME;
     }
 }
