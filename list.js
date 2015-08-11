@@ -115,6 +115,7 @@ function getInfoFromS3Data(xml) {
     files: files,
     directories: directories,
     prefix: $(xml.find('Prefix')[0]).text(),
+    bucketname: $(xml.find('Name')).text(),
     nextMarker: encodeURIComponent(nextMarker)
   }
 }
@@ -124,13 +125,16 @@ function getInfoFromS3Data(xml) {
 //    files: ..
 //    directories: ..
 //    prefix: ...
+//    bucketname: ...
 // } 
 function prepareTable(info) {
   var files = info.files.concat(info.directories)
     , prefix = info.prefix
+    , bucketname = info.bucketname
     ;
   var cols = [ 45, 30, 15 ];
   var content = [];
+  content.push('Bucket: ' + bucketname + ', Directory: /' + prefix + '\n');
   content.push(padRight('Last Modified', cols[1]) + '  ' + padRight('Size', cols[2]) + 'Key \n');
   content.push(new Array(cols[0] + cols[1] + cols[2] + 4).join('-') + '\n');
 
