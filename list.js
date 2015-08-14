@@ -6,6 +6,14 @@ if (typeof BUCKET_URL == 'undefined') {
   var BUCKET_URL = location.protocol + '//' + location.hostname;
 }
 
+if (typeof BUCKET_NAME != 'undefined') {
+    // if bucket_url does not start with bucket_name,
+    // assume path-style url
+    if (!~BUCKET_URL.indexOf(location.protocol + '//' + BUCKET_NAME)) {
+        BUCKET_URL += '/' + BUCKET_NAME;
+    }
+}
+
 if (typeof S3B_ROOT_DIR == 'undefined') {
   var S3B_ROOT_DIR = '';
 }
