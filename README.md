@@ -22,6 +22,7 @@ Copy these 3 lines into the HTML file where you want the listing to show up:
     <!-- the JS variables for the listing -->
     <script type="text/javascript">
       // var S3BL_IGNORE_PATH = true;
+      // var BUCKET_NAME = 'BUCKET';
       // var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
       // var S3B_ROOT_DIR = 'SUBDIR_L1/SUBDIR_L2/';
     </script>
@@ -60,6 +61,44 @@ Valid options = `''` (default) or your _bucket URL_, e.g.
 
 This variable tells the script where your bucket XML listing is, and where the files are.
 If the variable is left empty, the script will use the same hostname as the _index.html_.
+
+
+#### BUCKET_NAME variable
+Valid options = `''` (default) or your _bucket name_, e.g.
+
+`BUCKET`
+
+This option is designed to support access to S3 buckets in non-website mode,
+via both path-style and virtualhost-style access urls simultaneously, from the
+same index.html file. 
+
+> NOTE: It is *not* recommended to use both BUCKET_URL and BUCKET_NAME in the
+same index.html file.
+
+See the [Amazon Documentation](
+http://docs.aws.amazon.com/AmazonS3/latest/dev/VirtualHosting.html) for details
+on the different url access formats.
+
+The tables below attempt to highlight how BUCKET_NAME affects 
+configuration and use cases.
+
+*Without using BUCKET_NAME:*
+
+Configuration | Result | Link
+------------ | ----------- | --------
+bucket_url is `undefined`; access url is virtualhost-based | Success | [link](http://listing-test.s3.amazonaws.com/index-null.html)
+bucket_url is `undefined`; access url is path-based | Error (Ok, expected) | [link](http://s3.amazonaws.com/listing-test/index-null.html)
+bucket_url is virtualhost-based; access url is virtualhost-based | Success | [link](http://listing-test.s3.amazonaws.com/index-vh.html)
+bucket_url is virtualhost-based; access url is path-based | Error (Fail) | [link](http://s3.amazonaws.com/listing-test/index-vh.html)
+bucket_url is path-based; access url is virtualhost-based | Error (Fail) | [link](http://listing-test.s3.amazonaws.com/index-path.html)
+bucket_url is path-based; access url is path-based | Success | [link](http://s3.amazonaws.com/listing-test/index-path.html)
+
+*Using BUCKET_NAME to address the two failing configurations from above:*
+
+Configuration | Result | Link
+------------ | ----------- | --------
+bucket_name is set; access url is virtualhost-based | Success | [link](http://listing-test.s3.amazonaws.com/index-bucketname.html)
+bucket_name is set; access url is path-based | Success | [link](http://s3.amazonaws.com/listing-test/index-bucketname.html)
 
 
 #### S3B_ROOT_DIR variable
@@ -133,9 +172,12 @@ Mandatory settings:
 Mandatory settings:
 ```
       var S3BL_IGNORE_PATH = true;
+      var BUCKET_NAME = 'BUCKET';
 ```
 - Put _index.html_ in your bucket.
-- Use the _index.html_'s full path to access the script, e.g. _`http://BUCKET.s3-REGION.amazonaws.com/index.html`_
+- Access the bucket via either the virtualhost- or path-style url:
+  - https://BUCKET.s3-REGION.amazonaws.com
+  - https://s3-REGION.amazonaws.com/BUCKET
 
 
 ## S3 website bucket permissions
