@@ -93,7 +93,7 @@ function getInfoFromS3Data(xml) {
     return {
       Key: item.find('Key').text(),
       LastModified: item.find('LastModified').text(),
-      Size: item.find('Size').text(),
+      Size: bytesToHumanReadable(item.find('Size').text()),
       Type: 'file'
     }
   });
@@ -185,4 +185,14 @@ function padRight(padString, length) {
     str = str + ' ';
   }
   return str;
+}
+
+function bytesToHumanReadable(sizeInBytes) {
+  var i = -1;
+  var units = [' kB', ' MB', ' GB'];
+  do {
+    sizeInBytes = sizeInBytes / 1024;
+    i++;
+  } while (sizeInBytes > 1024);
+  return Math.max(sizeInBytes, 0.1).toFixed(1) + units[i];
 }
