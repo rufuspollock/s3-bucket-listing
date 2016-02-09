@@ -4,6 +4,8 @@ if (typeof S3BL_IGNORE_PATH == 'undefined' || S3BL_IGNORE_PATH!=true) {
 
 if (typeof BUCKET_URL == 'undefined') {
   var BUCKET_URL = location.protocol + '//' + location.hostname;
+} else if BUCKET_WEBSITE_URL == 'undefined' {
+  var BUCKET_WEBSITE_URL = BUCKET_URL;
 }
 
 if (typeof BUCKET_NAME != 'undefined') {
@@ -158,7 +160,7 @@ function prepareTable(info) {
         item.href = item.keyText;
       }
     } else {
-      item.href = BUCKET_URL + '/' + encodeURIComponent(item.Key);
+      item.href = BUCKET_WEBSITE_URL + '/' + encodeURIComponent(item.Key);
       item.href = item.href.replace(/%2F/g, '/');
     }
     var row = renderRow(item, cols);
