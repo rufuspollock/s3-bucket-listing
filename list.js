@@ -134,8 +134,8 @@ function prepareTable(info) {
   content.push(padRight('Last Modified', cols[1]) + '  ' + padRight('Size', cols[2]) + 'Key \n');
   content.push(new Array(cols[0] + cols[1] + cols[2] + 4).join('-') + '\n');
 
-  // add the ../ at the start of the directory listing
-  if (prefix) {
+  // add the ../ at the start of the directory listing, unless when at the root dir already
+  if (prefix && prefix !== S3B_ROOT_DIR) {
     var up = prefix.replace(/\/$/, '').split('/').slice(0, -1).concat('').join('/'), // one directory up
       item = {
         Key: up,
