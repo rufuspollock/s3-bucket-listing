@@ -32,6 +32,9 @@ function getS3Data(marker, html) {
       $('#listing').html('');
       var xml = $(data);
       var info = getInfoFromS3Data(xml);
+
+      buildNavigation(info)
+
       html = typeof html !== 'undefined' ? html + prepareTable(info) : prepareTable(info);
       if (info.nextMarker != "null") {
         getS3Data(info.nextMarker, html);
@@ -43,6 +46,20 @@ function getS3Data(marker, html) {
       console.error(error);
       $('#listing').html('<strong>Error: ' + error + '</strong>');
     });
+}
+
+function buildNavigation(info) {
+  var root = '<a href="?prefix=">' + BUCKET_URL + '</a> / '
+  if (info.prefix) {
+    var processedPathSegments = ''
+    var content = $.map(info.prefix.split('/'), function(pathSegment){
+      processedPathSegments = processedPathSegments + pathSegment + '/'
+      return '<a href="?prefix=' + processedPathSegments + '">' + pathSegment + '</a>'
+    });
+    $('#navigation').html(root + content.join(' / '))
+  } else {
+    $('#navigation').html(root)
+  }
 }
 
 function createS3QueryUrl(marker) {
@@ -124,7 +141,7 @@ function getInfoFromS3Data(xml) {
 //    files: ..
 //    directories: ..
 //    prefix: ...
-// } 
+// }
 function prepareTable(info) {
   var files = info.files.concat(info.directories)
     , prefix = info.prefix
