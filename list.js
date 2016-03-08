@@ -53,7 +53,7 @@ function buildNavigation(info) {
   if (info.prefix) {
     var processedPathSegments = ''
     var content = $.map(info.prefix.split('/'), function(pathSegment){
-      processedPathSegments = processedPathSegments + pathSegment + '/'
+      processedPathSegments = processedPathSegments + encodeURIComponent(pathSegment) + '/'
       return '<a href="?prefix=' + processedPathSegments + '">' + pathSegment + '</a>'
     });
     $('#navigation').html(root + content.join(' / '))
