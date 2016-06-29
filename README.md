@@ -39,7 +39,7 @@ We've provided an example [index.html][index] file you can just copy if you want
 The script downloads your XML bucket listing, parses it and simulates a webserver's text-based directory browsing mode.
 
 
-#### S3BL_IGNORE_PATH variable
+#### `S3BL_IGNORE_PATH` variable
 Valid options = `false` (default) or `true`
 
 Setting this to false will cause URL navigation to be in this form:
@@ -51,7 +51,7 @@ Setting this to true will cause URL navigation to be in this form:
 - _`http://data.openspending.org/index.html?prefix=worldbank/cameroon/`_
 
 
-#### BUCKET_URL variable
+#### `BUCKET_URL` variable
 Valid options = `''` (default) or your _bucket URL_, e.g.
 
 `https://BUCKET.s3-REGION.amazonaws.com` (both http & https are valid)
@@ -63,7 +63,7 @@ This variable tells the script where your bucket XML listing is, and where the f
 If the variable is left empty, the script will use the same hostname as the _index.html_.
 
 
-#### BUCKET_NAME variable
+#### `BUCKET_NAME` variable
 Valid options = `''` (default) or your _bucket name_, e.g.
 
 `BUCKET`
@@ -101,7 +101,7 @@ bucket_name is set; access url is virtualhost-based | Success | [link](http://li
 bucket_name is set; access url is path-based | Success | [link](http://s3.amazonaws.com/listing-test/index-bucketname.html)
 
 
-#### S3B_ROOT_DIR variable
+#### `S3B_ROOT_DIR` variable
 Valid options = `''` (default) or `'SUBDIR_L1/'` or `'SUBDIR_L1/SUBDIR_L2/'` or etc.
 
 - Do __NOT__ put a leading '/',     e.g. `'/SUBDIR_L1/'`
@@ -112,6 +112,14 @@ This will disallow navigation shallower than your set directory.
 Note that this only disallows navigation to shallower directories, but __NOT__ access. Any person with knowledge of the existence of bucket XML listings will be able to manually access those files.
 
 Use Amazon S3 permissions to set granular file permissions.
+
+
+### `BUCKET_WEBSITE_URL` variable
+
+This variable is optional.  It allows you to modify the host used for link hrefs.  You may want to use this if you have a custom domain name for your S3 bucket, or if you want to leverage things like "virtual files" (like 301 redirects).
+
+Normally your links will point to `<BUCKET_URL>/<KEY>`.  If specified, your links will point to `<BUCKET_WEBSITE_URL>/<KEY>` (but the list API calls will still use the configured `BUCKET_URL`);
+
 
 
 ## Four Valid Configurations
