@@ -4,8 +4,6 @@ if (typeof S3BL_IGNORE_PATH == 'undefined' || S3BL_IGNORE_PATH!=true) {
 
 if (typeof BUCKET_URL == 'undefined') {
   var BUCKET_URL = location.protocol + '//' + location.hostname;
-} else if (BUCKET_WEBSITE_URL == 'undefined') {
-  var BUCKET_WEBSITE_URL = BUCKET_URL;
 }
 
 if (typeof BUCKET_NAME != 'undefined') {
@@ -14,6 +12,10 @@ if (typeof BUCKET_NAME != 'undefined') {
     if (!~BUCKET_URL.indexOf(location.protocol + '//' + BUCKET_NAME)) {
         BUCKET_URL += '/' + BUCKET_NAME;
     }
+}
+
+if (typeof BUCKET_WEBSITE_URL == 'undefined') {
+  var BUCKET_WEBSITE_URL = BUCKET_URL;
 }
 
 if (typeof S3B_ROOT_DIR == 'undefined') {
