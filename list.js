@@ -53,7 +53,7 @@ function getS3Data(marker, html) {
 }
 
 function buildNavigation(info) {
-  var root = '<a href="?prefix=">' + BUCKET_URL + '</a> / '
+  var root = '<a href="?prefix=">' + BUCKET_WEBSITE_URL + '</a> / '
   if (info.prefix) {
     var processedPathSegments = ''
     var content = $.map(info.prefix.split('/'), function(pathSegment){
