@@ -28,7 +28,7 @@ Copy these 3 lines into the HTML file where you want the listing to show up:
     </script>
 
     <!-- the JS to the do the listing -->
-    <script src="https://rgrp.github.io/s3-bucket-listing/list.js"></script>
+    <script src="https://rawgit.com/rgrp/s3-bucket-listing/gh-pages/list.js"></script>
 
 We've provided an example [index.html][index] file you can just copy if you want.
 
