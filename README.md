@@ -36,10 +36,12 @@ We've provided an example [index.html][index] file you can just copy if you want
 
 
 ## How it works
+
 The script downloads your XML bucket listing, parses it and simulates a webserver's text-based directory browsing mode.
 
 
 #### `S3BL_IGNORE_PATH` variable
+
 Valid options = `false` (default) or `true`
 
 Setting this to false will cause URL navigation to be in this form:
@@ -52,6 +54,7 @@ Setting this to true will cause URL navigation to be in this form:
 
 
 #### `BUCKET_URL` variable
+
 Valid options = `''` (default) or your _bucket URL_, e.g.
 
 `https://BUCKET.s3-REGION.amazonaws.com` (both http & https are valid)
@@ -64,6 +67,7 @@ If the variable is left empty, the script will use the same hostname as the _ind
 
 
 #### `BUCKET_NAME` variable
+
 Valid options = `''` (default) or your _bucket name_, e.g.
 
 `BUCKET`
@@ -75,12 +79,12 @@ same index.html file.
 > NOTE: It is *not* recommended to use both BUCKET_URL and BUCKET_NAME in the
 same index.html file.
 
-See the [Amazon Documentation](
-http://docs.aws.amazon.com/AmazonS3/latest/dev/VirtualHosting.html) for details
-on the different url access formats.
+See the [Amazon
+Documentation](http://docs.aws.amazon.com/AmazonS3/latest/dev/VirtualHosting.html)
+for details on the different url access formats.
 
-The tables below attempt to highlight how BUCKET_NAME affects 
-configuration and use cases.
+The tables below attempt to highlight how BUCKET_NAME affects configuration and
+use cases.
 
 *Without using BUCKET_NAME:*
 
@@ -102,6 +106,7 @@ bucket_name is set; access url is path-based | Success | [link](http://s3.amazon
 
 
 #### `S3B_ROOT_DIR` variable
+
 Valid options = `''` (default) or `'SUBDIR_L1/'` or `'SUBDIR_L1/SUBDIR_L2/'` or etc.
 
 - Do __NOT__ put a leading '/',     e.g. `'/SUBDIR_L1/'`
@@ -121,8 +126,8 @@ This variable is optional.  It allows you to modify the host used for link hrefs
 Normally your links will point to `<BUCKET_URL>/<KEY>`.  If specified, your links will point to `<BUCKET_WEBSITE_URL>/<KEY>` (but the list API calls will still use the configured `BUCKET_URL`);
 
 
-
 ## Four Valid Configurations
+
 1. Embed into your website
 2. Use Amazon S3 in website mode with URL navigation
 3. Use Amazon S3 in website mode with prefix mode (ignore_path mode)
@@ -130,20 +135,26 @@ Normally your links will point to `<BUCKET_URL>/<KEY>`.  If specified, your link
 
 
 #### 1. Embed into your website
+
 Mandatory settings:
+
 ```
       var S3BL_IGNORE_PATH = true;
       var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
 ```
+
 Copy the code into whatever file you want to act as your listing page.
 
 
 #### 2. Use Amazon S3 in website mode with URL navigation
+
 Mandatory settings:
+
 ```
       var S3BL_IGNORE_PATH = false;
       var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
 ```
+
 - Enable website hosting under `Static website hosting` in your S3 bucket settings.
 - Enter `index.html` as your `Index Document` and `Error Document`.
 - Put _index.html_ in your bucket.
@@ -165,6 +176,7 @@ Note that US east region is **different** in that the S3 bucket endpoint does no
 
 
 #### 3. Use Amazon S3 in website mode with prefix mode (ignore_path mode)
+
 Mandatory settings:
 ```
       var S3BL_IGNORE_PATH = true;
@@ -177,11 +189,14 @@ Mandatory settings:
 
 
 #### 4. Use Amazon S3 in non-website mode
+
 Mandatory settings:
+
 ```
       var S3BL_IGNORE_PATH = true;
       var BUCKET_NAME = 'BUCKET';
 ```
+
 - Put _index.html_ in your bucket.
 - Access the bucket via either the virtualhost- or path-style url:
   - https://BUCKET.s3-REGION.amazonaws.com
@@ -212,7 +227,9 @@ You must setup the S3 website bucket to allow public read access.
     ]
 }
 ```
+
 * Assign the following CORS policy
+
 ```
 <CORSConfiguration>
  <CORSRule>
@@ -225,6 +242,7 @@ You must setup the S3 website bucket to allow public read access.
 
 
 ## Enabling HTTPS
+
 You MUST use config 1 or 4. Amazon S3 doesn't support HTTPS in website mode.
 
 Use https for your BUCKET_URL.
@@ -284,7 +302,7 @@ Set the following bucket policy
 
 ## Copyright and License
 
-Copyright 2012-2013 Rufus Pollock.
+Copyright 2012-2016 Rufus Pollock.
 
 Licensed under the MIT license:
 
