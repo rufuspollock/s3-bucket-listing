@@ -156,6 +156,8 @@ Mandatory settings:
 ```
 
 - Enable website hosting under `Static website hosting` in your S3 bucket settings.
+- Under `Permissions` grant `Everyone` the `List` and `View` permissions.
+- Under `Permissions` go to `Edit CORS Configuration` and add the configuration listed in the following section 'S3 website bucket permissions'
 - Enter `index.html` as your `Index Document` and `Error Document`.
 - Put _index.html_ in your bucket.
 - Navigate to _`http://BUCKET.s3-website-REGION.amazonaws.com`_ to access the script.
