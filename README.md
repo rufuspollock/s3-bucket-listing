@@ -1,14 +1,28 @@
+## Changes forked from master
+
+This changed the following:
+
+- __Sort__ the file listing from _newest -> oldest_(See code comments to reverse this)
+- Updated __jQuery__ to a newer version (_v3.1.1_ - while larger, it does cache so it should only reload once a year)
+- Cleaned up the main code a bit
+- Reformatted the html to better follow the html5 statandards
+
+According to the following url, the function I employed should yield the fastest sort method available.
+
+## Live Demo
+
+If you want to see an example of this (modified) script in action check out:
+
+http://esp-link.s3-website-us-east-1.amazonaws.com/
+
+## Original Readme starts here
+
 Create nice directory listings for s3 buckets using only javascript and HTML.
 
 The listing can be deployed on any site and can also be deployed into a bucket.
 
 Inspiration from http://aws.amazon.com/code/Amazon-S3/1713
 
-## Live Demo
-
-If you want to see an example of this script in action check out:
-
-<http://data.openspending.org/>
 
 ## Usage
 
