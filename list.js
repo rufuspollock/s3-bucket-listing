@@ -1,3 +1,4 @@
+var rowNo = 0;
 if (typeof S3BL_IGNORE_PATH == 'undefined' || S3BL_IGNORE_PATH != true) {
   var S3BL_IGNORE_PATH = false;
 }
@@ -209,10 +210,15 @@ function prepareTable(info) {
 }
 
 function renderRow(item, cols) {
-  var row = '';
+  if (rowNo % 2 == 0) {
+    var row = '<span id="rowEven">';
+  } else {
+    var row = '<span id="rowOdd">';
+  }
   row += padRight(item.LastModified, cols[1]) + '  ';
   row += padRight(item.Size, cols[2]);
-  row += '<a href="' + item.href + '">' + item.keyText + '</a>';
+  row += '<a href="' + item.href + '">' + item.keyText + '</a></span>';
+  rowNo++;
   return row;
 }
 
