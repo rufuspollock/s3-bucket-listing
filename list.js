@@ -26,6 +26,12 @@ jQuery(function($) {
   getS3Data();
 });
 
+// This will sort your file listing by most recently modified.
+// Flip the comparator to '>' if you want oldest files first.
+function sortFunction(a,b){  
+    return a.LastModified < b.LastModified ? 1 : -1; 
+}
+
 function getS3Data(marker, html) {
   var s3_rest_url = createS3QueryUrl(marker);
   // set loading notice
@@ -37,7 +43,14 @@ function getS3Data(marker, html) {
       var xml = $(data);
       var info = getInfoFromS3Data(xml);
 
-      buildNavigation(info)
+      // Slight modification by FuzzBall03
+      // This will sort your file listing by most recently modified.
+      // See url for example: http://esp-link.s3-website-us-east-1.amazonaws.com/
+      var sortedFiles = info.files;
+      sortedFiles.sort(sortFunction);
+      info.files = sortedFiles;
+
+      buildNavigation(info);
 
       html = typeof html !== 'undefined' ? html + prepareTable(info) : prepareTable(info);
       if (info.nextMarker != "null") {
