@@ -36,7 +36,8 @@ function getS3Data(marker, html) {
       $('#listing').html('');
       var xml = $(data);
       var info = getInfoFromS3Data(xml);
-
+      // sort by LastModified
+      info.files.sort(function(a,b) {return (b.LastModified > a.LastModified) ? 1 : ((a.LastModified > b.LastModified) ? -1 : 0);} );
       buildNavigation(info)
 
       html = typeof html !== 'undefined' ? html + prepareTable(info) : prepareTable(info);
