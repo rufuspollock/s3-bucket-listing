@@ -22,8 +22,30 @@ if (typeof S3B_ROOT_DIR == 'undefined') {
   var S3B_ROOT_DIR = '';
 }
 
+if (typeof S3B_SORT == 'undefined') {
+  var S3B_SORT = 'DEFAULT';
+}
+
 jQuery(function($) { getS3Data(); });
 
+// This will sort your file listing by most recently modified.
+// Flip the comparator to '>' if you want oldest files first.
+function sortFunction(a, b) {
+  switch (S3B_SORT) {
+    case "OLD2NEW":
+      return a.LastModified > b.LastModified ? 1 : -1;
+    case "NEW2OLD":
+      return a.LastModified < b.LastModified ? 1 : -1;
+    case "A2Z":
+      return a.Key < b.Key ? 1 : -1;
+    case "Z2A":
+      return a.Key > b.Key ? 1 : -1;
+    case "BIG2SMALL":
+      return a.Size < b.Size ? 1 : -1;
+    case "SMALL2BIG":
+      return a.Size > b.Size ? 1 : -1;
+  }
+}
 function getS3Data(marker, html) {
   var s3_rest_url = createS3QueryUrl(marker);
   // set loading notice
@@ -35,6 +57,16 @@ function getS3Data(marker, html) {
         $('#listing').html('');
         var xml = $(data);
         var info = getInfoFromS3Data(xml);
+
+        // Slight modification by FuzzBall03
+        // This will sort your file listing based on var S3B_SORT
+        // See url for example:
+        // http://esp-link.s3-website-us-east-1.amazonaws.com/
+        if (S3B_SORT != 'DEFAULT') {
+          var sortedFiles = info.files;
+          sortedFiles.sort(sortFunction);
+          info.files = sortedFiles;
+        }
 
         buildNavigation(info);
 
@@ -114,33 +146,39 @@ function createS3QueryUrl(marker) {
 function getInfoFromS3Data(xml) {
   var files = $.map(xml.find('Contents'), function(item) {
     item = $(item);
+    // clang-format off
     return {
       Key: item.find('Key').text(),
           LastModified: item.find('LastModified').text(),
           Size: bytesToHumanReadable(item.find('Size').text()),
           Type: 'file'
     }
+    // clang-format on
   });
   var directories = $.map(xml.find('CommonPrefixes'), function(item) {
     item = $(item);
+    // clang-format off
     return {
       Key: item.find('Prefix').text(),
-      LastModified: '',
-      Size: '0',
-      Type: 'directory'
+        LastModified: '',
+        Size: '0',
+        Type: 'directory'
     }
+    // clang-format on
   });
   if ($(xml.find('IsTruncated')[0]).text() == 'true') {
     var nextMarker = $(xml.find('NextMarker')[0]).text();
   } else {
     var nextMarker = null;
   }
+  // clang-format off
   return {
     files: files,
     directories: directories,
     prefix: $(xml.find('Prefix')[0]).text(),
     nextMarker: encodeURIComponent(nextMarker)
   }
+  // clang-format on
 }
 
 // info is object like:
@@ -157,7 +195,7 @@ function prepareTable(info) {
                padRight('Size', cols[2]) + 'Key \n');
   content.push(new Array(cols[0] + cols[1] + cols[2] + 4).join('-') + '\n');
 
-  // add ../ at the start of the dir listing, unless we are already at the root dir
+  // add ../ at the start of the dir listing, unless we are already at root dir
   if (prefix && prefix !== S3B_ROOT_DIR) {
     var up = prefix.replace(/\/$/, '').split('/').slice(0, -1).concat('').join(
             '/'),  // one directory up
