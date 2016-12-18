@@ -16,8 +16,8 @@ Copy these 3 lines into the HTML file where you want the listing to show up:
 
     <div id="listing"></div>
 
-    <!-- add jquery - if you already have it just ignore this line -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <!-- add jQuery - if you already have it just ignore this line -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
     <!-- the JS variables for the listing -->
     <script type="text/javascript">
@@ -28,7 +28,7 @@ Copy these 3 lines into the HTML file where you want the listing to show up:
     </script>
 
     <!-- the JS to the do the listing -->
-    <script src="https://rawgit.com/rgrp/s3-bucket-listing/gh-pages/list.js"></script>
+    <script type="text/javascript" src="https://rawgit.com/rufuspollock/s3-bucket-listing/gh-pages/list.js"></script>
 
 We've provided an example [index.html][index] file you can just copy if you want.
 
@@ -254,7 +254,7 @@ For config 4, navigate to your index.html's full path using https, e.g. _`https:
 To stop browser warnings about displaying insecure content in secure mode:
 - Host the following 3 files in your website/bucket:
   - _list.js_
-  - http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js
+  - https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js
   - http://assets.okfn.org/images/icons/ajaxload-circle.gif
 - Edit _index.html_ to point to your bucket's `jquery.min.js` & `list.js` file (using relative paths)
 - Edit _list.js_ to point to your bucket's `ajaxload-circle.gif`
