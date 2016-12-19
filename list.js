@@ -26,10 +26,16 @@ if (typeof S3B_SORT == 'undefined') {
   var S3B_SORT = 'DEFAULT';
 }
 
+var rowNo = 0;
+
+// Let's apply our CSS Style sheet
+$('head')
+    .append(
+        '<link rel="stylesheet" type="text/css" href="https://rawgit.com/fuzzball03/s3-bucket-listing/pull-shading/S3.css">\n');
+
 jQuery(function($) { getS3Data(); });
 
-// This will sort your file listing by most recently modified.
-// Flip the comparator to '>' if you want oldest files first.
+// This will sort your file listing based on S3B_SORT.
 function sortFunction(a, b) {
   switch (S3B_SORT) {
     case "OLD2NEW":
@@ -46,6 +52,7 @@ function sortFunction(a, b) {
       return a.Size > b.Size ? 1 : -1;
   }
 }
+
 function getS3Data(marker, html) {
   var s3_rest_url = createS3QueryUrl(marker);
   // set loading notice
@@ -67,7 +74,6 @@ function getS3Data(marker, html) {
           sortedFiles.sort(sortFunction);
           info.files = sortedFiles;
         }
-
         buildNavigation(info);
 
         html = typeof html !== 'undefined' ? html + prepareTable(info) :
@@ -76,7 +82,7 @@ function getS3Data(marker, html) {
           getS3Data(info.nextMarker, html);
         } else {
           document.getElementById('listing').innerHTML =
-              '<pre>' + html + '</pre>';
+              '<br><div>' + html + '</div>';
         }
       })
       .fail(function(error) {
@@ -99,6 +105,24 @@ function buildNavigation(info) {
   } else {
     $('#navigation').html(root);
   }
+  $('#navigation')
+      .append(
+          '\n<br><br> <button class="pure-button" id="shading" href="#">MY TABLE SHADING</button>\n');
+  $('#navigation')
+      .append(
+          '\n<button class="button-bl pure-button" id="shading2" href="#">EZ TABLE SHADING</button>\n');
+  $('button#shading')
+      .click(function(e) {
+        e.preventDefault();
+        $('table#S3TABLE').toggleClass('shadedTable');
+        return false;
+      });
+  $('button#shading2')
+      .click(function(e) {
+        e.preventDefault();
+        $('table#S3TABLE').toggleClass('pure-table-striped');
+        return false;
+      });
 }
 
 function createS3QueryUrl(marker) {
@@ -149,9 +173,9 @@ function getInfoFromS3Data(xml) {
     // clang-format off
     return {
       Key: item.find('Key').text(),
-          LastModified: item.find('LastModified').text(),
-          Size: bytesToHumanReadable(item.find('Size').text()),
-          Type: 'file'
+      LastModified: item.find('LastModified').text(),
+      Size: bytesToHumanReadable(item.find('Size').text()),
+      Type: 'file'
     }
     // clang-format on
   });
@@ -160,9 +184,9 @@ function getInfoFromS3Data(xml) {
     // clang-format off
     return {
       Key: item.find('Prefix').text(),
-        LastModified: '',
-        Size: '0',
-        Type: 'directory'
+      LastModified: '',
+      Size: '0',
+      Type: 'directory'
     }
     // clang-format on
   });
@@ -191,14 +215,15 @@ function prepareTable(info) {
   var files = info.files.concat(info.directories), prefix = info.prefix;
   var cols = [45, 30, 15];
   var content = [];
-  content.push(padRight('Last Modified', cols[1]) + '  ' +
-               padRight('Size', cols[2]) + 'Key \n');
-  content.push(new Array(cols[0] + cols[1] + cols[2] + 4).join('-') + '\n');
+  content.push(
+      '<table id="S3TABLE" class="pure-table pure-table-horizontal"><tbody>');
+  content.push('<tr><th>Last Modified</th><th>Size</th><th>Key</th></tr> \n');
 
   // add ../ at the start of the dir listing, unless we are already at root dir
   if (prefix && prefix !== S3B_ROOT_DIR) {
     var up = prefix.replace(/\/$/, '').split('/').slice(0, -1).concat('').join(
             '/'),  // one directory up
+                   // clang-format off
         item =
             {
               Key: up,
@@ -207,6 +232,7 @@ function prepareTable(info) {
               keyText: '../',
               href: S3BL_IGNORE_PATH ? '?prefix=' + up : '../'
             },
+                   // clang-format on
         row = renderRow(item, cols);
     content.push(row + '\n');
   }
@@ -229,26 +255,22 @@ function prepareTable(info) {
     content.push(row + '\n');
   });
 
+  content.push('</tbody></<table>');  // End of table
   return content.join('');
 }
 
 function renderRow(item, cols) {
-  var row = '';
-  row += padRight(item.LastModified, cols[1]) + '  ';
-  row += padRight(item.Size, cols[2]);
-  row += '<a href="' + item.href + '">' + item.keyText + '</a>';
+  if (rowNo % 2 == 0) {
+    var row = '<tr id="rowEven">';
+  } else {
+    var row = '<tr id="rowOdd">';
+  }
+  row += '<td>' + item.LastModified + '</td>';
+  row += '<td>' + item.Size + '</td>';
+  row += '<td>' +
+         '<a href="' + item.href + '">' + item.keyText + '</a></td></tr>';
+  rowNo++;
   return row;
-}
-
-function padRight(padString, length) {
-  var str = padString.slice(0, length - 3);
-  if (padString.length > str.length) {
-    str += '...';
-  }
-  while (str.length < length) {
-    str = str + ' ';
-  }
-  return str;
 }
 
 function bytesToHumanReadable(sizeInBytes) {
