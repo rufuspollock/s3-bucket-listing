@@ -25,6 +25,7 @@ Copy these 3 lines into the HTML file where you want the listing to show up:
       // var BUCKET_NAME = 'BUCKET';
       // var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
       // var S3B_ROOT_DIR = 'SUBDIR_L1/SUBDIR_L2/';
+      // var S3B_SORT = 'DEFAULT';
     </script>
 
     <!-- the JS to the do the listing -->
@@ -126,12 +127,27 @@ This variable is optional.  It allows you to modify the host used for link hrefs
 Normally your links will point to `<BUCKET_URL>/<KEY>`.  If specified, your links will point to `<BUCKET_WEBSITE_URL>/<KEY>` (but the list API calls will still use the configured `BUCKET_URL`);
 
 
+### `S3B_SORT` variable
+
+This will sort your bucket listing. Variable options should be self-explanatory.
+
+Valid options:
+
+- `OLD2NEW`
+- `NEW2OLD`
+- `A2Z`
+- `Z2A`
+- `BIG2SMALL`
+- `SMALL2BIG`
+
+
 ## Four Valid Configurations
 
 1. Embed into your website
 2. Use Amazon S3 in website mode with URL navigation
 3. Use Amazon S3 in website mode with prefix mode (ignore_path mode)
 4. Use Amazon S3 in non-website mode
+
 
 
 #### 1. Embed into your website
