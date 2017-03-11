@@ -27,6 +27,7 @@ Copy these 3 lines into the HTML file where you want the listing to show up:
       // var S3B_ROOT_DIR = 'SUBDIR_L1/SUBDIR_L2/';
       // var S3B_SORT = 'DEFAULT';
       // var EXCLUDE_FILE = 'index.html';
+      // var AUTO_TITLE = true;
     </script>
 
     <!-- the JS to the do the listing -->
@@ -145,6 +146,11 @@ Valid options:
 ### `EXCLUDE_FILE` variable
 
 This variable is optional.  It allows you to exclude a file (e.g. index.html) from the file listings.
+
+
+### `AUTO_TITLE` variable
+
+This variable is optional.  It allows you to automatically set the title.
 
 
 ## Four Valid Configurations
