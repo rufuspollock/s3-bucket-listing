@@ -26,6 +26,7 @@ Copy these 3 lines into the HTML file where you want the listing to show up:
       // var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
       // var S3B_ROOT_DIR = 'SUBDIR_L1/SUBDIR_L2/';
       // var S3B_SORT = 'DEFAULT';
+      // var EXCLUDE_FILE = 'index.html';
     </script>
 
     <!-- the JS to the do the listing -->
@@ -139,6 +140,11 @@ Valid options:
 - `Z2A`
 - `BIG2SMALL`
 - `SMALL2BIG`
+
+
+### `EXCLUDE_FILE` variable
+
+This variable is optional.  It allows you to exclude a file (e.g. index.html) from the file listings.
 
 
 ## Four Valid Configurations

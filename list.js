@@ -226,7 +226,8 @@ function prepareTable(info) {
       item.href = item.href.replace(/%2F/g, '/');
     }
     var row = renderRow(item, cols);
-    content.push(row + '\n');
+    if (typeof EXCLUDE_FILE == 'undefined' || EXCLUDE_FILE != item.Key)
+      content.push(row + '\n');
   });
 
   return content.join('');
