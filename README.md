@@ -28,6 +28,7 @@ Copy these 3 lines into the HTML file where you want the listing to show up:
       // var S3B_SORT = 'DEFAULT';
       // var EXCLUDE_FILE = 'index.html';
       // var AUTO_TITLE = true;
+      // var S3_REGION = 's3'; // for us-east-1
     </script>
 
     <!-- the JS to the do the listing -->
@@ -151,6 +152,11 @@ This variable is optional.  It allows you to exclude a file (e.g. index.html) fr
 ### `AUTO_TITLE` variable
 
 This variable is optional.  It allows you to automatically set the title.
+
+
+### `S3_REGION` variable
+
+This variable is optional.  It allows you to automatically set the BUCKET_URL and BUCKET_WEBSITE_URL.
 
 
 ## Four Valid Configurations
