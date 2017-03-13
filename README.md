@@ -156,7 +156,14 @@ This variable is optional.  It allows you to automatically set the title.
 
 ### `S3_REGION` variable
 
-This variable is optional.  It allows you to automatically set the BUCKET_URL and BUCKET_WEBSITE_URL.
+This variable is optional.  It allows you specify the S3 region that the bucket is in so that the BUCKET_URL and BUCKET_WEBSITE_URL variables will be configured automatcially.
+
+The 'us-east-1' region is unique and would require this variable be set to 's3' for a bucket in that region, buckets in other regions would just have this set to 's3-' + their region name (e.g. 's3-eu-west-1').
+
+E.g. setting S3_REGION to 's3' for a bucket named 'www.example.com' in the us-east-1 region would automatically set:
+
+  BUCKET_URL = 'http://www.example.com.s3.amazonaws.com'
+  BUCKET_WEBSITE_URL = 'http://www.example.com'
 
 
 ## Four Valid Configurations
