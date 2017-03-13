@@ -1,3 +1,7 @@
+if (typeof AUTO_TITLE != 'undefined' && AUTO_TITLE == true) {
+  document.title = location.hostname;
+}
+
 if (typeof S3BL_IGNORE_PATH == 'undefined' || S3BL_IGNORE_PATH != true) {
   var S3BL_IGNORE_PATH = false;
 }
@@ -226,7 +230,8 @@ function prepareTable(info) {
       item.href = item.href.replace(/%2F/g, '/');
     }
     var row = renderRow(item, cols);
-    content.push(row + '\n');
+    if (typeof EXCLUDE_FILE == 'undefined' || EXCLUDE_FILE != item.Key)
+      content.push(row + '\n');
   });
 
   return content.join('');
