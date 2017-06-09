@@ -197,7 +197,7 @@ function getInfoFromS3Data(xml) {
 //    prefix: ...
 // }
 function prepareTable(info) {
-  var files = info.files.concat(info.directories), prefix = info.prefix;
+  var files = info.directories.concat(info.files), prefix = info.prefix;
   var cols = [45, 30, 15];
   var content = [];
   content.push(padRight('Last Modified', cols[1]) + '  ' +
