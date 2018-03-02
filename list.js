@@ -35,6 +35,12 @@ if (typeof S3B_SORT == 'undefined') {
   var S3B_SORT = 'DEFAULT';
 }
 
+if (typeof EXCLUDE_FILE == 'undefined') {
+  var EXCLUDE_FILE = [];
+} else if (typeof EXCLUDE_FILE == 'string') {
+  var EXCLUDE_FILE = [EXCLUDE_FILE];
+}
+
 jQuery(function($) { getS3Data(); });
 
 // This will sort your file listing by most recently modified.
@@ -235,7 +241,7 @@ function prepareTable(info) {
       item.href = item.href.replace(/%2F/g, '/');
     }
     var row = renderRow(item, cols);
-    if (typeof EXCLUDE_FILE == 'undefined' || EXCLUDE_FILE != item.Key)
+    if (!EXCLUDE_FILE.contains(item.Key))
       content.push(row + '\n');
   });
 
