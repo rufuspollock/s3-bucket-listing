@@ -241,7 +241,7 @@ function prepareTable(info) {
       item.href = item.href.replace(/%2F/g, '/');
     }
     var row = renderRow(item, cols);
-    if (!EXCLUDE_FILE.contains(item.Key))
+    if (!EXCLUDE_FILE.includes(item.Key))
       content.push(row + '\n');
   });
 
