@@ -146,7 +146,7 @@ Valid options:
 
 ### `EXCLUDE_FILE` variable
 
-This variable is optional.  It allows you to exclude a file (e.g. index.html) from the file listings.
+This variable is optional.  It allows you to exclude a file (e.g. index.html) or a list of files from the file listings.
 
 
 ### `AUTO_TITLE` variable
