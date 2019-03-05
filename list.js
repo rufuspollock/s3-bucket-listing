@@ -171,7 +171,8 @@ function buildNavigation(info) {
 
 function createS3QueryUrl(marker) {
   var s3_rest_url = BUCKET_URL;
-  s3_rest_url += '?delimiter=/';
+  s3_rest_url += '?list-type=2'
+  s3_rest_url += '&delimiter=/';
 
   //
   // Handling paths and prefixes:
