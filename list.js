@@ -285,13 +285,12 @@ function prepareTable(info) {
     if (item.Type === 'directory') {
       if (S3BL_IGNORE_PATH) {
         item.href = location.protocol + '//' + location.hostname +
-                    location.pathname + '?prefix=' + item.Key;
+                    location.pathname + '?prefix=' + encodePath(item.Key);
       } else {
         item.href = item.keyText;
       }
     } else {
-      item.href = BUCKET_WEBSITE_URL + '/' + encodeURIComponent(item.Key);
-      item.href = item.href.replace(/%2F/g, '/');
+      item.href = BUCKET_WEBSITE_URL + '/' + encodePath(item.Key);
     }
     var row = renderRow(item, cols);
     if (!EXCLUDE_FILE.includes(item.Key))
@@ -299,6 +298,11 @@ function prepareTable(info) {
   });
 
   return content.join('');
+}
+
+// Encode everything but "/" which are significant in paths and to S3
+function encodePath(path) {
+  return encodeURIComponent(path).replace(/%2F/g, '/')
 }
 
 function renderRow(item, cols) {
