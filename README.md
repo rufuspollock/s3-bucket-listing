@@ -12,8 +12,9 @@ If you want to see an example of this script in action check out:
 
 ## Usage
 
-Copy these 3 lines into the HTML file where you want the listing to show up:
+Copy these 4 lines into the HTML file where you want the listing to show up:
 
+    <div id="navigation"></div>
     <div id="listing"></div>
 
     <!-- add jQuery - if you already have it just ignore this line -->
@@ -26,17 +27,17 @@ Copy these 3 lines into the HTML file where you want the listing to show up:
       // var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
       // var S3B_ROOT_DIR = 'SUBDIR_L1/SUBDIR_L2/';
       // var S3B_SORT = 'DEFAULT';
-      // var EXCLUDE_FILE = 'index.html';
+      // var EXCLUDE_FILE = 'index.html';  // change to array to exclude multiple files
       // var AUTO_TITLE = true;
       // var S3_REGION = 's3'; // for us-east-1
     </script>
 
     <!-- the JS to the do the listing -->
-    <script type="text/javascript" src="https://rawgit.com/rufuspollock/s3-bucket-listing/gh-pages/list.js"></script>
+    <script type="text/javascript" src="https://rufuspollock.github.io/s3-bucket-listing/list.js"></script>
 
 We've provided an example [index.html][index] file you can just copy if you want.
 
-[index]: https://github.com/rgrp/s3-bucket-listing/blob/gh-pages/index.html
+[index]: https://github.com/rufuspollock/s3-bucket-listing/blob/gh-pages/index.html
 
 
 ## How it works
