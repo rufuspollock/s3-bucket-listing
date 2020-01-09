@@ -138,6 +138,12 @@ function getS3Data(marker, html) {
 
         buildNavigation(info);
 
+        // Add a <base> element to the document head to make relative links
+        // work even if the URI does not contain a trailing slash
+        var base = window.location.href
+        base = (base.endsWith('/')) ? base : base + '/';
+        $('head').append('<base href="' + base + '">');
+
         html = typeof html !== 'undefined' ? html + prepareTable(info) :
                                              prepareTable(info);
         if (info.nextMarker != "null") {
