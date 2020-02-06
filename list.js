@@ -287,7 +287,7 @@ function prepareTable(info) {
         item.href = location.protocol + '//' + location.hostname +
                     location.pathname + '?prefix=' + encodePath(item.Key);
       } else {
-        item.href = item.keyText;
+        item.href = encodePath(item.keyText);
       }
     } else {
       item.href = BUCKET_WEBSITE_URL + '/' + encodePath(item.Key);
