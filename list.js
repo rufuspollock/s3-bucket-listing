@@ -3,7 +3,7 @@ if (typeof AUTO_TITLE != 'undefined' && AUTO_TITLE == true) {
 }
 
 if (typeof S3_REGION != 'undefined') {
-  var BUCKET_URL = 'http://' + location.hostname + '.' + S3_REGION + '.amazonaws.com'; // e.g. just 's3' for us-east-1 region
+  var BUCKET_URL = location.protocol + '//' + location.hostname + '.' + S3_REGION + '.amazonaws.com'; // e.g. just 's3' for us-east-1 region
   var BUCKET_WEBSITE_URL = location.protocol + '//' + location.hostname;
 }
 
