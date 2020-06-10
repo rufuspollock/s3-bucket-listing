@@ -160,14 +160,15 @@ function getS3Data(marker, html) {
 }
 
 function buildNavigation(info) {
-  var root = '<a href="?prefix=">' + BUCKET_WEBSITE_URL + '</a> / ';
+  var baseUrl = S3BL_IGNORE_PATH == false ? '/' : '?prefix=';
+  var root = '<a href="' + baseUrl + '">' + BUCKET_WEBSITE_URL + '</a> / ';
   if (info.prefix) {
     var processedPathSegments = '';
     var content = $.map(info.prefix.split('/'), function(pathSegment) {
       processedPathSegments =
           processedPathSegments + encodeURIComponent(pathSegment) + '/';
-      return '<a href="?prefix=' + processedPathSegments + '">' + pathSegment +
-             '</a>';
+      return '<a href="' + baseUrl + processedPathSegments + '">' +
+             pathSegment + '</a>';
     });
     $('#navigation').html(root + content.join(' / '));
   } else {
