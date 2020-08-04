@@ -167,7 +167,7 @@ function buildNavigation(info) {
     var content = $.map(info.prefix.split('/'), function(pathSegment) {
       processedPathSegments =
           processedPathSegments + encodeURIComponent(pathSegment) + '/';
-      return '<a href="' + baseUrl + processedPathSegments + '">' +
+      return '<a href="' + baseUrl + processedPathSegments.replace(/"/g, '&quot;') + '">' +
              pathSegment + '</a>';
     });
     $('#navigation').html(root + content.join(' / '));
@@ -272,7 +272,7 @@ function prepareTable(info) {
 
   // add ../ at the start of the dir listing, unless we are already at root dir
   if (prefix && prefix !== S3B_ROOT_DIR) {
-    var up = prefix.replace(/\/$/, '').split('/').slice(0, -1).concat('').join(
+    var up = prefix.replace(/\/$/, '').replace(/"/g, '&quot;').split('/').slice(0, -1).concat('').join(
             '/'),  // one directory up
         item =
             {
