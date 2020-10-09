@@ -219,6 +219,7 @@ function createS3QueryUrl(marker) {
 }
 
 function getInfoFromS3Data(xml) {
+  var prefix = $(xml.find('Prefix')[0]).text();
   var files = $.map(xml.find('Contents'), function(item) {
     item = $(item);
     // clang-format off
@@ -230,6 +231,9 @@ function getInfoFromS3Data(xml) {
     }
     // clang-format on
   });
+  if (prefix && prefix !== S3B_ROOT_DIR && files[0].Key == prefix) {
+    files.shift();
+  }
   var directories = $.map(xml.find('CommonPrefixes'), function(item) {
     item = $(item);
     // clang-format off
@@ -250,7 +254,7 @@ function getInfoFromS3Data(xml) {
   return {
     files: files,
     directories: directories,
-    prefix: $(xml.find('Prefix')[0]).text(),
+    prefix: prefix,
     nextMarker: encodeURIComponent(nextMarker)
   }
   // clang-format on
