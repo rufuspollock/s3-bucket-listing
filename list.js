@@ -37,7 +37,7 @@ if (typeof S3B_SORT == 'undefined') {
 
 if (typeof EXCLUDE_FILE == 'undefined') {
   var EXCLUDE_FILE = [];
-} else if (typeof EXCLUDE_FILE == 'string') {
+} else if (typeof EXCLUDE_FILE == 'string' || EXCLUDE_FILE instanceof RegExp) {
   var EXCLUDE_FILE = [EXCLUDE_FILE];
 }
 
@@ -304,7 +304,7 @@ function prepareTable(info) {
       item.href = BUCKET_WEBSITE_URL + '/' + encodePath(item.Key);
     }
     var row = renderRow(item, cols);
-    if (!EXCLUDE_FILE.includes(item.Key))
+    if (!EXCLUDE_FILE.some(function(exclude){ return testExcludeFilter(exclude, item.Key); }))
       content.push(row + '\n');
   });
 
@@ -343,4 +343,17 @@ function bytesToHumanReadable(sizeInBytes) {
     i++;
   } while (sizeInBytes > 1024);
   return Math.max(sizeInBytes, 0.1).toFixed(1) + units[i];
+}
+
+function testExcludeFilter(filter, key) {
+  if (typeof filter == 'string') {
+    return key == filter;
+  }
+  else if (filter instanceof RegExp) {
+    return filter.test(key);
+  }
+  else
+  {
+    throw "exclude filter is not a string or regexp";
+  }
 }
