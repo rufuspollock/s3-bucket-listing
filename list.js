@@ -231,7 +231,7 @@ function getInfoFromS3Data(xml) {
     }
     // clang-format on
   });
-  if (prefix && prefix !== S3B_ROOT_DIR && files[0].Key == prefix) {
+  if (prefix && prefix !== S3B_ROOT_DIR && files[0] && files[0].Key == prefix) {
     files.shift();
   }
   var directories = $.map(xml.find('CommonPrefixes'), function(item) {
