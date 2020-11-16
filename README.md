@@ -275,13 +275,20 @@ You must setup the S3 website bucket to allow public read access.
 * Assign the following CORS policy
 
 ```
-<CORSConfiguration>
- <CORSRule>
-   <AllowedOrigin>*</AllowedOrigin>
-   <AllowedMethod>GET</AllowedMethod>
-   <AllowedHeader>*</AllowedHeader>
- </CORSRule>
-</CORSConfiguration>
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET"
+        ],
+        "AllowedOrigins": [
+            "*"
+        ],
+        "ExposeHeaders": []
+    }
+]
 ```
 
 
