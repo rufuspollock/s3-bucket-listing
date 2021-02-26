@@ -131,9 +131,8 @@ function getS3Data(marker, html) {
         // See url for example:
         // http://esp-link.s3-website-us-east-1.amazonaws.com/
         if (S3B_SORT != 'DEFAULT') {
-          var sortedFiles = info.files;
-          sortedFiles.sort(sortFunction);
-          info.files = sortedFiles;
+          info.files.sort(sortFunction);
+          info.directories.sort(sortFunction);
         }
 
         buildNavigation(info);
