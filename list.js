@@ -132,6 +132,7 @@ function getS3Data(marker, html) {
         // http://esp-link.s3-website-us-east-1.amazonaws.com/
         if (S3B_SORT != 'DEFAULT') {
           info.files.sort(sortFunction);
+          info.directories.sort(sortFunction);
         }
 
         buildNavigation(info);
