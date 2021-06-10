@@ -104,9 +104,9 @@ function sortFunction(a, b) {
     case "NEW2OLD":
       return a.LastModified < b.LastModified ? 1 : -1;
     case "A2Z":
-      return a.Key < b.Key ? 1 : -1;
-    case "Z2A":
       return a.Key > b.Key ? 1 : -1;
+    case "Z2A":
+      return a.Key < b.Key ? 1 : -1;
     case "BIG2SMALL":
       return a.Size < b.Size ? 1 : -1;
     case "SMALL2BIG":
