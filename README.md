@@ -272,6 +272,35 @@ You must setup the S3 website bucket to allow public read access.
 }
 ```
 
+If you want to allow read/download only access to a specific set of IP addresses, you can block all public access and assign a bucket policy like below. Note the ListBucket permission is necessary as it allows client access to the bucket XML, which our index.html javascript operates from to generate the listing. See this [AWS article for more information on other policy conditionals](https://aws.amazon.com/premiumsupport/knowledge-center/block-s3-traffic-vpc-ip/).
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowSpecificIPsOnly",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": [
+                "s3:GetObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::{your-bucket-name}/*",
+                "arn:aws:s3:::{your-bucket-name}"
+            ],
+            "Condition": {
+                "IpAddress": {
+                    "aws:SourceIp": [
+                        "12.34.56.78/24",
+                    ]
+                }
+            }
+        }
+    ]
+}
+```
+
 * Assign the following CORS policy
 
 ```
