@@ -114,7 +114,7 @@ function sortFunction(a, b) {
   }
 }
 
-function getS3Data(marker, html) {
+function getS3Data(marker, prev) {
   var s3_rest_url = createS3QueryUrl(marker);
   // set loading notice
   $('#listing')
@@ -126,15 +126,6 @@ function getS3Data(marker, html) {
         var xml = $(data);
         var info = getInfoFromS3Data(xml);
 
-        // Slight modification by FuzzBall03
-        // This will sort your file listing based on var S3B_SORT
-        // See url for example:
-        // http://esp-link.s3-website-us-east-1.amazonaws.com/
-        if (S3B_SORT != 'DEFAULT') {
-          info.files.sort(sortFunction);
-          info.directories.sort(sortFunction);
-        }
-
         buildNavigation(info);
 
         // Add a <base> element to the document head to make relative links
@@ -143,13 +134,25 @@ function getS3Data(marker, html) {
         base = (base.endsWith('/')) ? base : base + '/';
         $('head').append('<base href="' + base + '">');
 
-        html = typeof html !== 'undefined' ? html + prepareTable(info) :
-                                             prepareTable(info);
+        if (typeof prev !== 'undefined') {
+          info.files = info.files.concat(prev.files)
+          info.directories = info.directories.concat(prev.directories)
+        }
+
         if (info.nextMarker != "null") {
-          getS3Data(info.nextMarker, html);
+          getS3Data(info.nextMarker, info);
         } else {
+          // Slight modification by FuzzBall03
+          // This will sort your file listing based on var S3B_SORT
+          // See url for example:
+          // http://esp-link.s3-website-us-east-1.amazonaws.com/
+          if (S3B_SORT != 'DEFAULT') {
+            info.files.sort(sortFunction);
+            info.directories.sort(sortFunction);
+          }
+
           document.getElementById('listing').innerHTML =
-              '<pre>' + html + '</pre>';
+                '<pre>' + prepareTable(info) + '</pre>';
         }
       })
       .fail(function(error) {
