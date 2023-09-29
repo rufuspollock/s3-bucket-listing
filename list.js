@@ -215,7 +215,7 @@ function createS3QueryUrl(marker) {
     s3_rest_url += '&prefix=' + encodePath(prefix);
   }
   if (marker) {
-    s3_rest_url += '&marker=' + encodeURIComponent(marker);
+    s3_rest_url += '&marker=' + marker;
   }
   return s3_rest_url;
 }
