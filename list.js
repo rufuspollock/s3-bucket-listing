@@ -168,7 +168,7 @@ function buildNavigation(info) {
     var processedPathSegments = '';
     var content = $.map(info.prefix.split('/'), function(pathSegment) {
       processedPathSegments =
-          processedPathSegments + pathSegment + '/';
+          processedPathSegments + encodeURIComponent(pathSegment) + '/';
       return '<a href="' + baseUrl + processedPathSegments.replace(/"/g, '&quot;') + '">' +
              pathSegment + '</a>';
     });
@@ -212,10 +212,10 @@ function createS3QueryUrl(marker) {
   if (prefix) {
     // make sure we end in /
     var prefix = prefix.replace(/\/$/, '') + '/';
-    s3_rest_url += '&prefix=' + encodePath(prefix);
+    s3_rest_url += '&prefix=' + prefix;
   }
   if (marker) {
-    s3_rest_url += '&marker=' + encodeURIComponent(marker);
+    s3_rest_url += '&marker=' + marker;
   }
   return s3_rest_url;
 }
