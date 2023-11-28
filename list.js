@@ -35,6 +35,10 @@ if (typeof S3B_SORT == 'undefined') {
   var S3B_SORT = 'DEFAULT';
 }
 
+if (typeof S3B_STAT_DIRS == 'undefined' || S3B_STAT_DIRS != true) {
+  var S3B_STAT_DIRS = false;
+}
+
 if (typeof EXCLUDE_FILE == 'undefined') {
   var EXCLUDE_FILE = [];
 } else if (typeof EXCLUDE_FILE == 'string' || EXCLUDE_FILE instanceof RegExp) {
@@ -238,10 +242,17 @@ function getInfoFromS3Data(xml) {
   }
   var directories = $.map(xml.find('CommonPrefixes'), function(item) {
     item = $(item);
+    last_modified = '';
+    if (S3B_STAT_DIRS) {
+        http = new XMLHttpRequest();
+        http.open("HEAD",item.find('Prefix').text(),false);
+        http.send();
+        last_modified = (new Date(http.getResponseHeader("Last-Modified"))).toISOString();
+    }
     // clang-format off
     return {
       Key: item.find('Prefix').text(),
-        LastModified: '',
+        LastModified: last_modified,
         Size: '0',
         Type: 'directory'
     }
