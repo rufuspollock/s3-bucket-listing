@@ -21,6 +21,7 @@ Copy these 4 lines into the HTML file where you want the listing to show up:
       // var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
       // var S3B_ROOT_DIR = 'SUBDIR_L1/SUBDIR_L2/';
       // var S3B_SORT = 'DEFAULT';
+      // var S3B_STAT_DIRS = false;
       // var EXCLUDE_FILE = 'index.html';  // change to array to exclude multiple files
       // var AUTO_TITLE = true;
       // var S3_REGION = 's3'; // for us-east-1
@@ -137,6 +138,11 @@ Valid options:
 - `Z2A`
 - `BIG2SMALL`
 - `SMALL2BIG`
+
+
+### `S3B_STAT_DIRS` variable
+
+This will obtain last modified information for directories at the cost of an additional request made per directory. Variable is a boolean.
 
 
 ### `EXCLUDE_FILE` variable
