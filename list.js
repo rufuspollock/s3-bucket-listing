@@ -2,10 +2,14 @@ if (typeof AUTO_TITLE != 'undefined' && AUTO_TITLE == true) {
   document.title = location.hostname;
 }
 
-if (typeof S3_REGION != 'undefined') {
-  var BUCKET_URL = location.protocol + '//' + location.hostname + '.' + S3_REGION + '.amazonaws.com'; // e.g. just 's3' for us-east-1 region
-  var BUCKET_WEBSITE_URL = location.protocol + '//' + location.hostname;
+if (typeof S3_REGION != 'undefined' && S3_REGION == 's3') {
+  var BUCKET_URL = location.protocol + '//' + BUCKET_NAME + '.' + S3_REGION + '.amazonaws.com';
+} else {
+  var BUCKET_URL = location.protocol + '//' + BUCKET_NAME + '.amazonaws.com';
 }
+
+// Eğer BUCKET_WEBSITE_URL kullanılacaksa, doğru URL yapısını sağlayın
+var BUCKET_WEBSITE_URL = BUCKET_URL;
 
 if (typeof S3BL_IGNORE_PATH == 'undefined' || S3BL_IGNORE_PATH != true) {
   var S3BL_IGNORE_PATH = false;
@@ -40,9 +44,9 @@ if (typeof S3B_STAT_DIRS == 'undefined' || S3B_STAT_DIRS != true) {
 }
 
 if (typeof EXCLUDE_FILE == 'undefined') {
-  var EXCLUDE_FILE = [];
+  var EXCLUDE_FILE = ['list.js']; 
 } else if (typeof EXCLUDE_FILE == 'string' || EXCLUDE_FILE instanceof RegExp) {
-  var EXCLUDE_FILE = [EXCLUDE_FILE];
+  EXCLUDE_FILE = [EXCLUDE_FILE, 'list.js'];
 }
 
 // https://tc39.github.io/ecma262/#sec-array.prototype.includes
