@@ -18,7 +18,7 @@ Copy these 4 lines into the HTML file where you want the listing to show up:
     <script type="text/javascript">
       // var S3BL_IGNORE_PATH = true;
       // var BUCKET_NAME = 'BUCKET';
-      // var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
+      // var BUCKET_URL = 'https://BUCKET.s3.REGION.amazonaws.com';
       // var S3B_ROOT_DIR = 'SUBDIR_L1/SUBDIR_L2/';
       // var S3B_SORT = 'DEFAULT';
       // var S3B_STAT_DIRS = false;
@@ -57,9 +57,9 @@ Setting this to true will cause URL navigation to be in this form:
 
 Valid options = `''` (default) or your _bucket URL_, e.g.
 
-`https://BUCKET.s3-REGION.amazonaws.com` (both http & https are valid)
+`https://BUCKET.s3.REGION.amazonaws.com` (both http & https are valid)
 
-- Do __NOT__ put a trailing '/', e.g. `https://BUCKET.s3-REGION.amazonaws.com/`
+- Do __NOT__ put a trailing '/', e.g. `https://BUCKET.s3.REGION.amazonaws.com/`
 - Do __NOT__ put S3 website URL, e.g. `https://BUCKET.s3-website-REGION.amazonaws.com`
 
 This variable tells the script where your bucket XML listing is, and where the files are.
@@ -182,7 +182,7 @@ Mandatory settings:
 
 ```
       var S3BL_IGNORE_PATH = true;
-      var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
+      var BUCKET_URL = 'https://BUCKET.s3.REGION.amazonaws.com';
 ```
 
 Copy the code into whatever file you want to act as your listing page.
@@ -194,7 +194,7 @@ Mandatory settings:
 
 ```
       var S3BL_IGNORE_PATH = false;
-      var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
+      var BUCKET_URL = 'https://BUCKET.s3.REGION.amazonaws.com';
 ```
 
 - Enable website hosting under `Static website hosting` in your S3 bucket settings.
@@ -224,7 +224,7 @@ Note that US east region is **different** in that the S3 bucket endpoint does no
 Mandatory settings:
 ```
       var S3BL_IGNORE_PATH = true;
-      var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
+      var BUCKET_URL = 'https://BUCKET.s3.REGION.amazonaws.com';
 ```
 - Enable website hosting under `Static website hosting` in your S3 bucket settings.
 - Enter `index.html` as your `Index Document` (Error Document is not required).
@@ -243,8 +243,8 @@ Mandatory settings:
 
 - Put _index.html_ in your bucket.
 - Access the bucket via either the virtualhost- or path-style url:
-  - https://BUCKET.s3-REGION.amazonaws.com
-  - https://s3-REGION.amazonaws.com/BUCKET
+  - https://BUCKET.s3.REGION.amazonaws.com
+  - https://s3.REGION.amazonaws.com/BUCKET
 
 
 ## S3 website bucket permissions
@@ -327,7 +327,7 @@ You MUST use config 1 or 4. Amazon S3 doesn't support HTTPS in website mode.
 
 Use https for your BUCKET_URL.
 
-For config 4, navigate to your index.html's full path using https, e.g. _`https://BUCKET.s3-REGION.amazonaws.com/index.html`_
+For config 4, navigate to your index.html's full path using https, e.g. _`https://BUCKET.s3.REGION.amazonaws.com/index.html`_
 
 To stop browser warnings about displaying insecure content in secure mode:
 - Host the following 3 files in your website/bucket:
