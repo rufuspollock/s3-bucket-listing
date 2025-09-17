@@ -11,9 +11,6 @@ Copy these 4 lines into the HTML file where you want the listing to show up:
     <div id="navigation"></div>
     <div id="listing"></div>
 
-    <!-- add jQuery - if you already have it just ignore this line -->
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
     <!-- the JS variables for the listing -->
     <script type="text/javascript">
       // var S3BL_IGNORE_PATH = true;
@@ -332,9 +329,8 @@ For config 4, navigate to your index.html's full path using https, e.g. _`https:
 To stop browser warnings about displaying insecure content in secure mode:
 - Host the following 3 files in your website/bucket:
   - _list.js_
-  - https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js
   - http://assets.okfn.org/images/icons/ajaxload-circle.gif
-- Edit _index.html_ to point to your bucket's `jquery.min.js` & `list.js` file (using relative paths)
+- Edit _index.html_ to point to your bucket's `list.js` file (using relative paths)
 - Edit _list.js_ to point to your bucket's `ajaxload-circle.gif`
 
 With config 4, you will then be utilising AmazonAWS' wildcard SSL (unfortunately it is SHA1 only).
