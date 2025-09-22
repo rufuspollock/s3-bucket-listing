@@ -143,7 +143,7 @@ function getS3Data(marker, prev) {
           info.directories = info.directories.concat(prev.directories)
         }
 
-        if (info.nextMarker != "null") {
+        if (info.nextMarker !== null) {
           getS3Data(info.nextMarker, info);
         } else {
           // Slight modification by FuzzBall03
@@ -262,7 +262,7 @@ function getInfoFromS3Data(xml) {
     // clang-format on
   });
   if ($(xml.find('IsTruncated')[0]).text() == 'true') {
-    var nextMarker = $(xml.find('NextMarker')[0]).text();
+    var nextMarker = xml.find('NextMarker').text();
   } else {
     var nextMarker = null;
   }
@@ -272,7 +272,7 @@ function getInfoFromS3Data(xml) {
     directories: directories,
     prefix: prefix,
     bucketname: $(xml.find('Name')).text(),
-    nextMarker: encodeURIComponent(nextMarker)
+    nextMarker: nextMarker
   }
   // clang-format on
 }
