@@ -262,7 +262,7 @@ function getInfoFromS3Data(xml) {
     // clang-format on
   });
   if ($(xml.find('IsTruncated')[0]).text() == 'true') {
-    var nextMarker = $(xml.find('NextMarker')[0]).text();
+    var nextMarker = xml.find('NextMarker').textContent
   } else {
     var nextMarker = null;
   }
