@@ -256,7 +256,7 @@ function getInfoFromS3Data(xml) {
     return {
       Key: item.find('Prefix').text(),
         LastModified: last_modified,
-        Size: '0',
+        Size: 'dir',
         Type: 'directory'
     }
     // clang-format on
@@ -301,7 +301,7 @@ function prepareTable(info) {
             {
               Key: up,
               LastModified: '',
-              Size: '',
+              Size: 'dir',
               keyText: '../',
               href: S3BL_IGNORE_PATH ? '?prefix=' + encodePath(up) : '../'
             },
