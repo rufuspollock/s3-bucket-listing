@@ -322,9 +322,13 @@ function prepareTable(info) {
     } else {
       item.href = BUCKET_WEBSITE_URL + '/' + encodePath(item.Key);
     }
-    var row = renderRow(item, cols);
-    if (!EXCLUDE_FILE.some(function(exclude){ return testExcludeFilter(exclude, item.Key); }))
-      content.push(row + '\n');
+    // Don't display the row unless keyText length is greater than zero
+    // keyText is zero length for the directory placeholder (because it is categorized as a file)
+    if (item.keyText.length) {
+      var row = renderRow(item, cols);
+      if (!EXCLUDE_FILE.some(function(exclude){ return testExcludeFilter(exclude, item.Key); }))
+        content.push(row + '\n');
+    }
   });
 
   return content.join('');
