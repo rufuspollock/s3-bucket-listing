@@ -173,7 +173,8 @@ function createS3QueryUrl(marker) {
 
 function getInfoFromS3Data(xml) {
   var prefix = xml.querySelector('Prefix') ? xml.querySelector('Prefix').textContent : '';
-  var files = Array.from(xml.querySelectorAll('Contents')).map(function(item) {
+  var contents = Array.from(xml.querySelectorAll('Contents'));
+  var files = contents.map(function(item) {
     return {
       Key: item.querySelector('Key').textContent,
       LastModified: item.querySelector('LastModified').textContent,
@@ -199,8 +200,16 @@ function getInfoFromS3Data(xml) {
       Type: 'directory'
     };
   });
-  var nextMarker = xml.querySelector('IsTruncated').textContent === 'true' ?
-    xml.querySelector('NextMarker').textContent : null;
+  var nextMarker = null;
+  if (xml.querySelector('IsTruncated').textContent === 'true') {
+    var nextMarkerElement = xml.querySelector('NextMarker');
+    if (nextMarkerElement) {
+      nextMarker = nextMarkerElement.textContent;
+    } else if (contents.length > 0) {
+      // When NextMarker is not provided, use the last key from Contents
+      nextMarker = contents[contents.length - 1].querySelector('Key').textContent;
+    }
+  }
   return {
     files: files,
     directories: directories,
