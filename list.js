@@ -255,7 +255,7 @@ function prepareTable(info) {
     item.keyText = item.Key.substring(prefix.length);
     if (item.Type === 'directory') {
       if (S3BL_IGNORE_PATH) {
-        item.href = location.origin +
+        item.href = BUCKET_WEBSITE_URL +
                     location.pathname + '?prefix=' + encodePath(item.Key);
       } else {
         item.href = encodePath(item.keyText);
