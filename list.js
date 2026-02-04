@@ -71,7 +71,7 @@ function getS3Data(marker, prev) {
   const listing_element = document.getElementById('listing');
   // set loading notice
   listing_element.innerHTML =
-    '<img src="//assets.okfn.org/images/icons/ajaxload-circle.gif" />';
+    '<img src="https://assets.okfn.org/images/icons/ajaxload-circle.gif" />';
 
   fetch(s3_rest_url)
     .then(response => response.text())

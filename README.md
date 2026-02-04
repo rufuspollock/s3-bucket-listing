@@ -329,7 +329,7 @@ For config 4, navigate to your index.html's full path using https, e.g. _`https:
 To stop browser warnings about displaying insecure content in secure mode:
 - Host the following 3 files in your website/bucket:
   - _list.js_
-  - http://assets.okfn.org/images/icons/ajaxload-circle.gif
+  - https://assets.okfn.org/images/icons/ajaxload-circle.gif
 - Edit _index.html_ to point to your bucket's `list.js` file (using relative paths)
 - Edit _list.js_ to point to your bucket's `ajaxload-circle.gif`
 
